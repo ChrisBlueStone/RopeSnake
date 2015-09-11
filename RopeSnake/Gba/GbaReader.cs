@@ -8,9 +8,27 @@ using RopeSnake.Graphics;
 
 namespace RopeSnake.Gba
 {
-    public class GbaGraphicsReader : BinaryReader, IGraphicsReader
+    public class GbaReader : BinaryReader, IGraphicsReader
     {
-        public GbaGraphicsReader(Source source) : base(source) { }
+        public GbaReader(Source source) : base(source) { }
+
+        public GbaHeader ReadHeader(int offset)
+        {
+            string title = ReadString(offset + 0xA0, 12);
+            string gameCode = ReadString(offset + 0xAC, 4);
+
+            return new GbaHeader
+            {
+                Title = title,
+                GameCode = gameCode
+            };
+        }
+
+        public ByteArraySource ReadCompressed(int offset)
+        {
+            byte[] array = Lz77.DecompLZ77(Source, offset);
+            return new ByteArraySource(array);
+        }
 
         public Color ReadColor()
         {
@@ -174,28 +192,10 @@ namespace RopeSnake.Gba
             return new TileProperties(tileIndex, flipX, flipY, paletteIndex);
         }
 
-        public GbaHeader ReadHeader(int offset)
-        {
-            string title = ReadString(offset + 0xA0, 12);
-            string gameCode = ReadString(offset + 0xAC, 4);
-
-            return new GbaHeader
-            {
-                Title = title,
-                GameCode = gameCode
-            };
-        }
-
-        public ByteArraySource ReadCompressed(int offset)
-        {
-            byte[] array = Lz77.DecompLZ77(Source, offset);
-            return new ByteArraySource(array);
-        }
-
         public TileSet ReadCompressedTileSet(int offset, int bitDepth)
         {
             Source decomp = ReadCompressed(offset);
-            GbaGraphicsReader reader = new GbaGraphicsReader(decomp);
+            GbaReader reader = new GbaReader(decomp);
             return reader.ReadTileSetAt(0, decomp.Length / bitDepth / 8, bitDepth);
         }
 
