@@ -8,18 +8,18 @@ using RopeSnake.Graphics;
 
 namespace RopeSnake.Gba
 {
-    public class GbaReader : BinaryReader, IGraphicsReader
+    public class GbaGraphicsReader : BinaryReader, IGraphicsReader
     {
-        public GbaReader(Source source) : base(source) { }
+        public GbaGraphicsReader(Source source) : base(source) { }
 
         public Color ReadColor()
         {
-            Color value = ReadColor(Position);
+            Color value = ReadColorAt(Position);
             Position += 2;
             return value;
         }
 
-        public Color ReadColor(int offset)
+        public Color ReadColorAt(int offset)
         {
             int value = ReadUShort(offset);
 
@@ -30,16 +30,22 @@ namespace RopeSnake.Gba
             return new Color((byte)r, (byte)g, (byte)b);
         }
 
-        public Palette ReadPalette() => ReadPalette(1, 16);
+        public Palette ReadPalette() => ReadPalette(1);
+
+        public Palette ReadPalette(int paletteCount) => ReadPalette(paletteCount, 16);
 
         public Palette ReadPalette(int paletteCount, int colorCount)
         {
-            Palette value = ReadPalette(Position, paletteCount, colorCount);
+            Palette value = ReadPaletteAt(Position, paletteCount, colorCount);
             Position += paletteCount * colorCount * 2;
             return value;
         }
 
-        public Palette ReadPalette(int offset, int paletteCount, int colorCount)
+        public Palette ReadPaletteAt(int offset) => ReadPaletteAt(offset, 1);
+
+        public Palette ReadPaletteAt(int offset, int paletteCount) => ReadPaletteAt(offset, paletteCount, 16);
+
+        public Palette ReadPaletteAt(int offset, int paletteCount, int colorCount)
         {
             Palette palette = new Palette(paletteCount, colorCount);
 
@@ -47,7 +53,7 @@ namespace RopeSnake.Gba
             {
                 for (int j = 0; j < colorCount; j++)
                 {
-                    palette.SetColor(i, j, ReadColor(offset));
+                    palette.SetColor(i, j, ReadColorAt(offset));
                     offset += 2;
                 }
             }
@@ -55,16 +61,18 @@ namespace RopeSnake.Gba
             return palette;
         }
 
-        public Tile ReadTile()
+        public Tile ReadTile() => ReadTile(4);
+
+        public Tile ReadTile(int bitDepth)
         {
-            Tile value = ReadTile(Position, 4);
-            Position += 32;
+            Tile value = ReadTileAt(Position, bitDepth);
+            Position += bitDepth * 8;
             return value;
         }
 
-        public Tile ReadTile(int offset) => ReadTile(offset, 4);
+        public Tile ReadTileAt(int offset) => ReadTileAt(offset, 4);
 
-        public Tile ReadTile(int offset, int bitDepth)
+        public Tile ReadTileAt(int offset, int bitDepth)
         {
             Tile tile = new Tile(8, 8);
 
@@ -105,18 +113,18 @@ namespace RopeSnake.Gba
 
         public TileSet ReadTileSet(int length)
         {
-            TileSet value = ReadTileSet(Position, length, 4);
+            TileSet value = ReadTileSetAt(Position, length, 4);
             Position += length * 32;
             return value;
         }
 
-        public TileSet ReadTileSet(int offset, int length) => ReadTileSet(offset, length, 4);
+        public TileSet ReadTileSetAt(int offset, int length) => ReadTileSetAt(offset, length, 4);
 
-        public TileSet ReadTileSet(int offset, int length, int bitDepth)
+        public TileSet ReadTileSetAt(int offset, int length, int bitDepth)
         {
             TileSet tileSet = TileSet.Create(8, 8, length, () =>
              {
-                 Tile tile = ReadTile(offset, bitDepth);
+                 Tile tile = ReadTileAt(offset, bitDepth);
                  offset += bitDepth * 8;
                  return tile;
              });
@@ -126,20 +134,20 @@ namespace RopeSnake.Gba
 
         public TileGrid ReadTileGrid(int width, int height) => ReadTileGrid(width, height, 8, 8);
 
-        public TileGrid ReadTileGrid(int offset, int width, int height) => ReadTileGrid(offset, width, height, 8, 8);
+        public TileGrid ReadTileGridAt(int offset, int width, int height) => ReadTileGridAt(offset, width, height, 8, 8);
 
         public TileGrid ReadTileGrid(int width, int height, int tileWidth, int tileHeight)
         {
-            TileGrid value = ReadTileGrid(Position, width, height, tileWidth, tileHeight);
+            TileGrid value = ReadTileGridAt(Position, width, height, tileWidth, tileHeight);
             Position += width * height * 2;
             return value;
         }
 
-        public TileGrid ReadTileGrid(int offset, int width, int height, int tileWidth, int tileHeight)
+        public TileGrid ReadTileGridAt(int offset, int width, int height, int tileWidth, int tileHeight)
         {
             TileGrid tileGrid = TileGrid.Create(width, height, tileWidth, tileHeight, () =>
             {
-                TileProperties e = ReadTileProperties(offset);
+                TileProperties e = ReadTilePropertiesAt(offset);
                 offset += 2;
                 return e;
             });
@@ -149,12 +157,12 @@ namespace RopeSnake.Gba
 
         public TileProperties ReadTileProperties()
         {
-            TileProperties value = ReadTileProperties(Position);
+            TileProperties value = ReadTilePropertiesAt(Position);
             Position += 2;
             return value;
         }
 
-        public TileProperties ReadTileProperties(int offset)
+        public TileProperties ReadTilePropertiesAt(int offset)
         {
             int value = ReadUShort(offset);
 
@@ -187,8 +195,13 @@ namespace RopeSnake.Gba
         public TileSet ReadCompressedTileSet(int offset, int bitDepth)
         {
             Source decomp = ReadCompressed(offset);
-            GbaReader reader = new GbaReader(decomp);
-            return reader.ReadTileSet(0, decomp.Length / bitDepth / 8, bitDepth);
+            GbaGraphicsReader reader = new GbaGraphicsReader(decomp);
+            return reader.ReadTileSetAt(0, decomp.Length / bitDepth / 8, bitDepth);
+        }
+
+        public TileSet ReadTileSet(int length, int bitDepth)
+        {
+            throw new NotImplementedException();
         }
     }
 }

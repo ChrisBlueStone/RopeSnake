@@ -19,8 +19,8 @@ namespace RopeSnake.Mother3.Sample
             GbaReader reader = new GbaReader(rom);
 
             TileSet tileSet = reader.ReadCompressedTileSet(0x1BD4338, 8);
-            Palette palette = reader.ReadPalette(0x1BD5F40, 1, 256);
-            TileGrid tileGrid = reader.ReadTileGrid(0x1BD6140, 32, 32);
+            Palette palette = reader.ReadPaletteAt(0x1BD5F40, 1, 256);
+            TileGrid tileGrid = reader.ReadTileGridAt(0x1BD6140, 32, 32);
 
             Bitmap titleScreen = Renderer.RenderGrid(tileSet, palette, tileGrid, false);
             titleScreen.Save("titlescreen.png");
