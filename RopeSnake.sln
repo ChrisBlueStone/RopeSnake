@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RopeSnake", "RopeSnake\RopeSnake.csproj", "{274897AA-73DE-4A1E-985A-3385A8C63A2F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RopeSnake.Mother3", "RopeSnake.Mother3\RopeSnake.Mother3.csproj", "{CC99B75D-BCF4-4144-9B52-C99FAF593D79}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RopeSnake.Mother3.Sample", "RopeSnake.Mother3.Sample\RopeSnake.Mother3.Sample.csproj", "{8F127F4C-9210-4651-AE41-DA63AC2935EB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{274897AA-73DE-4A1E-985A-3385A8C63A2F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{274897AA-73DE-4A1E-985A-3385A8C63A2F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{274897AA-73DE-4A1E-985A-3385A8C63A2F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{274897AA-73DE-4A1E-985A-3385A8C63A2F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CC99B75D-BCF4-4144-9B52-C99FAF593D79}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CC99B75D-BCF4-4144-9B52-C99FAF593D79}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CC99B75D-BCF4-4144-9B52-C99FAF593D79}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CC99B75D-BCF4-4144-9B52-C99FAF593D79}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8F127F4C-9210-4651-AE41-DA63AC2935EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F127F4C-9210-4651-AE41-DA63AC2935EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8F127F4C-9210-4651-AE41-DA63AC2935EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8F127F4C-9210-4651-AE41-DA63AC2935EB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
