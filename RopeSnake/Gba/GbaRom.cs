@@ -10,26 +10,21 @@ namespace RopeSnake.Gba
 {
     public class GbaRom
     {
-        public ByteArraySource Source { get; private set; }
+        public ISource Source { get; private set; }
         public GbaHeader Header { get; private set; }
 
         public GbaRom(byte[] array)
         {
             Source = new ByteArraySource(array);
-            Initialize();
+            InitializeGba();
         }
 
         public GbaRom(string filePath) : this(File.ReadAllBytes(filePath)) { }
 
-        protected void Initialize()
+        protected void InitializeGba()
         {
-            GbaReader reader = new GbaReader(Source);
-            Header = reader.ReadHeader(0);
-        }
-
-        public static implicit operator Source(GbaRom gbaRom)
-        {
-            return gbaRom.Source;
+            IGbaReader reader = new GbaReader(Source);
+            Header = reader.ReadHeader();
         }
     }
 }

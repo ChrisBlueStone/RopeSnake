@@ -5,30 +5,33 @@ using System.Text;
 using System.Threading.Tasks;
 using RopeSnake.Gba;
 using RopeSnake.IO;
+using RopeSnake.Mother3.Data;
 
 namespace RopeSnake.Mother3
 {
-    public sealed class Mother3Rom : GbaRom
+    public sealed class Mother3Rom : GbaRom, IMother3Data
     {
+        private IGbaReader reader;
+
         public Mother3Version Version { get; set; }
 
         public Mother3Rom(byte[] array) : base(array)
         {
-            ReadInfo();
+            Initialize();
         }
 
         public Mother3Rom(string filePath) : base(filePath)
         {
-            ReadInfo();
+            Initialize();
         }
 
-        private void ReadInfo()
+        private void Initialize()
         {
-            GbaReader reader = new GbaReader(Source);
+            reader = new GbaReader(Source);
             Version = DetectVersion(reader);
         }
 
-        private Mother3Version DetectVersion(BinaryReader reader)
+        private Mother3Version DetectVersion(IBinaryReader reader)
         {
             if (Header.Title != "MOTHER3" || Header.GameCode != "A3UJ")
                 return Mother3Version.Invalid;
@@ -37,7 +40,7 @@ namespace RopeSnake.Mother3
                 return Mother3Version.Invalid;
 
             // Get the SHA256
-            string sha256 = Source.ComputeSHA256();
+            string sha256 = Source.ComputeSHA256(0, Source.Length);
 
             switch (sha256)
             {
@@ -57,6 +60,15 @@ namespace RopeSnake.Mother3
                     return Mother3Version.None;
             }
         }
+
+        #region IMother3Data implementation
+
+        public Item ReadItem(int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
     }
 
     public enum Mother3Version

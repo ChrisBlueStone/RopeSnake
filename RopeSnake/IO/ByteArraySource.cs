@@ -7,11 +7,11 @@ using System.Security.Cryptography;
 
 namespace RopeSnake.IO
 {
-    public sealed class ByteArraySource : Source
+    public sealed class ByteArraySource : ISource
     {
         private byte[] _array;
 
-        public override int Length
+        public int Length
         {
             get { return _array.Length; }
         }
@@ -26,17 +26,15 @@ namespace RopeSnake.IO
             _array = new byte[size];
         }
 
-        public override byte ReadByte(int offset)
+        public byte GetByte(int offset)
         {
             return _array[offset];
         }
 
-        public override void WriteByte(int offset, byte value)
+        public void SetByte(int offset, byte value)
         {
             _array[offset] = value;
         }
-
-        public string ComputeSHA256() => ComputeSHA256(0, _array.Length);
 
         public string ComputeSHA256(int offset, int count)
         {

@@ -6,87 +6,51 @@ using System.Threading.Tasks;
 
 namespace RopeSnake.IO
 {
-    public class BinaryReader : SourceReader
+    public class BinaryReader : IBinaryReader
     {
-        public BinaryReader(Source source) : base(source) { }
+        private ISource source;
+
+        public int Position { get; set; }
+
+        public BinaryReader(ISource source)
+        {
+            this.source = source;
+        }
 
         public byte[] ReadByteArray(int size)
         {
-            byte[] bytes = ReadByteArray(Position, size);
-            Position += size;
-            return bytes;
-        }
-
-        public byte[] ReadByteArray(int offset, int size)
-        {
             byte[] bytes = new byte[size];
             for (int i = 0; i < size; i++)
-                bytes[i] = ReadByte(offset++);
+                bytes[i] = source.GetByte(Position++);
             return bytes;
         }
 
         public ByteArraySource ReadByteArraySource(int size)
         {
-            ByteArraySource source = ReadByteArraySource(Position, size);
-            Position += size;
-            return source;
+            return new ByteArraySource(ReadByteArray(size));
         }
 
-        public ByteArraySource ReadByteArraySource(int offset, int size)
-        {
-            return new ByteArraySource(ReadByteArray(offset, size));
-        }
+        public byte ReadByte() => source.GetByte(Position++);
 
-        public sbyte ReadSByte() => ReadSByte(Position++);
+        public sbyte ReadSByte() => (sbyte)ReadByte();
 
-        public sbyte ReadSByte(int offset) => (sbyte)ReadByte(offset);
-
-        public ushort ReadUShort()
-        {
-            ushort value = ReadUShort(Position);
-            Position += 2;
-            return value;
-        }
-
-        public ushort ReadUShort(int offset)
-        {
-            return (ushort)(ReadByte(offset) | (ReadByte(offset + 1) << 8));
-        }
+        public ushort ReadUShort() => (ushort)(ReadByte() | (ReadByte() << 8));
 
         public short ReadShort() => (short)ReadUShort();
 
-        public short ReadShort(int offset) => (short)ReadUShort(offset);
-
-        public uint ReadUInt()
-        {
-            uint value = ReadUInt(Position);
-            Position += 4;
-            return value;
-        }
-
-        public uint ReadUInt(int offset)
-        {
-            return (uint)(ReadByte(offset) | (ReadByte(offset + 1) << 8) |
-                (ReadByte(offset + 2) << 16) | (ReadByte(offset + 3) << 24));
-        }
+        public uint ReadUInt() => (uint)(ReadByte() | (ReadByte() << 8) |
+                (ReadByte() << 16) | (ReadByte() << 24));
 
         public int ReadInt() => (int)ReadInt();
 
-        public int ReadInt(int offset) => (int)ReadUInt(offset);
+        public int ReadInt(int offset) => (int)ReadUInt();
 
         public string ReadString()
-        {
-            string value = ReadString(Position);
-            Position += value.Length + 1;
-            return value;
-        }
-
-        public string ReadString(int offset)
         {
             StringBuilder sb = new StringBuilder();
 
             byte ch;
-            while ((ch = ReadByte(offset++)) != 0)
+            while ((ch = ReadByte()) != 0)
             {
                 sb.Append((char)ch);
             }
@@ -94,16 +58,21 @@ namespace RopeSnake.IO
             return sb.ToString();
         }
 
-        public string ReadString(int offset, int maxLength)
+        public string ReadString(int maxLength)
         {
             StringBuilder sb = new StringBuilder(maxLength);
 
             byte ch;
             int counter = 0;
-            while ((ch = ReadByte(offset++)) != 0 && (counter++ < maxLength))
+            int oldPosition = Position;
+
+            while ((ch = ReadByte()) != 0 && (counter++ < maxLength))
             {
                 sb.Append((char)ch);
             }
+
+            // Ensure that the position is always incremented by maxLength
+            Position = oldPosition + maxLength;
 
             return sb.ToString();
         }

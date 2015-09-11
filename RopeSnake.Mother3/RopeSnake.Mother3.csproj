@@ -41,8 +41,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Data\IMother3Data.cs" />
+    <Compile Include="Data\Item.cs" />
     <Compile Include="Mother3Rom.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RomStructures\Bg.cs" />
+    <Compile Include="RomStructures\SizeLoc.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\RopeSnake\RopeSnake.csproj">

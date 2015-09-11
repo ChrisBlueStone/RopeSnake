@@ -47,7 +47,7 @@
     <Compile Include="Gba\GbaHeader.cs" />
     <Compile Include="Gba\GbaReader.cs" />
     <Compile Include="Gba\GbaRom.cs" />
-    <Compile Include="Gba\Lz77.cs" />
+    <Compile Include="Gba\IGbaReader.cs" />
     <Compile Include="Graphics\Color.cs" />
     <Compile Include="Graphics\GraphicsHelpers.cs" />
     <Compile Include="Graphics\Renderer.cs" />
@@ -58,10 +58,12 @@
     <Compile Include="Graphics\TileGrid.cs" />
     <Compile Include="Graphics\TileProperties.cs" />
     <Compile Include="Graphics\TileSet.cs" />
+    <Compile Include="IO\AlignmentException.cs" />
     <Compile Include="IO\BinaryReader.cs" />
     <Compile Include="IO\ByteArraySource.cs" />
-    <Compile Include="IO\Source.cs" />
-    <Compile Include="IO\SourceReader.cs" />
+    <Compile Include="IO\IBinaryReader.cs" />
+    <Compile Include="IO\IOHelpers.cs" />
+    <Compile Include="IO\ISource.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

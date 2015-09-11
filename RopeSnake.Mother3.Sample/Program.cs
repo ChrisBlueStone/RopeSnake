@@ -16,11 +16,16 @@ namespace RopeSnake.Mother3.Sample
         static void Main(string[] args)
         {
             Mother3Rom rom = new Mother3Rom("mother3.gba");
-            GbaReader reader = new GbaReader(rom);
+            GbaReader reader = new GbaReader(rom.Source);
 
-            TileSet tileSet = reader.ReadCompressedTileSet(0x1BD4338, 8);
-            Palette palette = reader.ReadPaletteAt(0x1BD5F40, 1, 256);
-            TileGrid tileGrid = reader.ReadTileGridAt(0x1BD6140, 32, 32);
+            reader.Position = 0x1BD4338;
+            TileSet tileSet = reader.ReadCompressedTileSet(8);
+
+            reader.Position = 0x1BD5F40;
+            Palette palette = reader.ReadPalette(1, 256);
+
+            reader.Position = 0x1BD6140;
+            TileGrid tileGrid = reader.ReadTileGrid(32, 32, 8, 8);
 
             Bitmap titleScreen = Renderer.RenderGrid(tileSet, palette, tileGrid, false);
             titleScreen.Save("titlescreen.png");
