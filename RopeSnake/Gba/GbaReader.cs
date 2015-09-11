@@ -12,6 +12,8 @@ namespace RopeSnake.Gba
     {
         public GbaReader(Source source) : base(source) { }
 
+        #region I/O
+
         public GbaHeader ReadHeader(int offset)
         {
             string title = ReadString(offset + 0xA0, 12);
@@ -29,6 +31,10 @@ namespace RopeSnake.Gba
             byte[] array = Lz77.DecompLZ77(Source, offset);
             return new ByteArraySource(array);
         }
+
+        #endregion
+
+        #region IGraphicsReader implementation
 
         public Color ReadColor()
         {
@@ -129,10 +135,12 @@ namespace RopeSnake.Gba
             return tile;
         }
 
-        public TileSet ReadTileSet(int length)
+        public TileSet ReadTileSet(int length) => ReadTileSet(length, 4);
+
+        public TileSet ReadTileSet(int length, int bitDepth)
         {
-            TileSet value = ReadTileSetAt(Position, length, 4);
-            Position += length * 32;
+            TileSet value = ReadTileSetAt(Position, length, bitDepth);
+            Position += length * bitDepth * 8;
             return value;
         }
 
@@ -199,9 +207,6 @@ namespace RopeSnake.Gba
             return reader.ReadTileSetAt(0, decomp.Length / bitDepth / 8, bitDepth);
         }
 
-        public TileSet ReadTileSet(int length, int bitDepth)
-        {
-            throw new NotImplementedException();
-        }
+        #endregion
     }
 }
