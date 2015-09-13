@@ -13,7 +13,7 @@ namespace RopeSnake.Graphics
 
         public virtual int Length { get; }
 
-        public Tile this[int index]
+        public virtual Tile this[int index]
         {
             get { return _tiles[index]; }
             set { _tiles[index] = value; }
@@ -25,9 +25,9 @@ namespace RopeSnake.Graphics
             Length = length;
         }
 
-        public Tile GetTile(int index) => _tiles[index];
+        public virtual Tile GetTile(int index) => _tiles[index];
 
-        public void SetTile(int index, Tile value) => _tiles[index] = value;
+        public virtual void SetTile(int index, Tile value) => _tiles[index] = value;
 
         public static TileSet Create(int width, int height, int length) => Create(width, height, length, () => new Tile(width, height));
 
