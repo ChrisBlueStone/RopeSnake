@@ -8,7 +8,7 @@ using RopeSnake.Graphics;
 
 namespace RopeSnake.Gba
 {
-    public class GbaReader : IGbaReader, IGraphicsReader
+    public class GbaReader : IGbaReader
     {
         private IBinaryReader reader { get; }
 
@@ -109,9 +109,23 @@ namespace RopeSnake.Gba
 
         public TileSet ReadCompressedTileSet(int bitDepth)
         {
-            ISource decomp = ReadCompressed();
-            IGraphicsReader reader = new GbaReader(decomp);
+            ByteArraySource decomp = ReadCompressed();
+            GbaReader reader = new GbaReader(decomp);
+
             return reader.ReadTileSet(decomp.Length / bitDepth / 8, bitDepth);
+        }
+
+        public TileGrid ReadCompressedTileGrid(int width, int height, int tileWidth, int tileHeight)
+        {
+            ByteArraySource decomp = ReadCompressed();
+            GbaReader reader = new GbaReader(decomp);
+
+            // Check for correct size
+            if (decomp.Length != width * height * 2)
+                throw new Exception("Decompressed block to " + decomp.Length + " bytes, but expected " +
+                    (width * height * 2).ToString() + " bytes");
+
+            return reader.ReadTileGrid(width, height, tileWidth, tileHeight);
         }
 
         #endregion
