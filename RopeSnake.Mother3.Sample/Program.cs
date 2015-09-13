@@ -15,7 +15,7 @@ namespace RopeSnake.Mother3.Sample
     {
         static void Main(string[] args)
         {
-            Mother3Rom rom = new Mother3Rom("mother3.gba");
+            Mother3Rom rom = new Mother3Rom(new ByteArraySource("mother3_jp.gba"), null);
             GbaReader reader = new GbaReader(rom.Source);
 
             reader.Position = 0x1BD4338;

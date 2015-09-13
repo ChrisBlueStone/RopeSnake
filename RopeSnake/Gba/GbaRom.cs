@@ -8,18 +8,14 @@ using RopeSnake.IO;
 
 namespace RopeSnake.Gba
 {
-    public class GbaRom
+    public class GbaRom : Rom
     {
-        public ISource Source { get; private set; }
         public GbaHeader Header { get; private set; }
 
-        public GbaRom(byte[] array)
+        public GbaRom(ISource source, RomSettings settings) : base(source, settings)
         {
-            Source = new ByteArraySource(array);
             InitializeGba();
         }
-
-        public GbaRom(string filePath) : this(File.ReadAllBytes(filePath)) { }
 
         protected void InitializeGba()
         {

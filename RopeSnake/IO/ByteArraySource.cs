@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
 using System.Security.Cryptography;
 
 namespace RopeSnake.IO
@@ -16,14 +17,13 @@ namespace RopeSnake.IO
             get { return _array.Length; }
         }
 
+        public ByteArraySource(string filePath) : this(File.ReadAllBytes(filePath)) { }
+
+        public ByteArraySource(int size) : this(new byte[size]) { }
+
         public ByteArraySource(byte[] array)
         {
             _array = array;
-        }
-
-        public ByteArraySource(int size)
-        {
-            _array = new byte[size];
         }
 
         public byte GetByte(int offset)
