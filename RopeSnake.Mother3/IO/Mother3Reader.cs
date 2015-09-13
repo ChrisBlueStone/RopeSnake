@@ -42,8 +42,8 @@ namespace RopeSnake.Mother3.IO
                 throw new Exception($"Unexpected header. Expected \"bg  \", actual \"{header}\"");
 
             // Read data
-            int unknown1 = reader.ReadInt();
-            int unknown2 = reader.ReadInt();
+            int unknownA = reader.ReadInt();
+            int unknownB = reader.ReadInt();
             TileGrid grid = reader.ReadCompressedTileGrid(32, 32, 8, 8);
 
             // Check for "~bg " footer
@@ -55,8 +55,8 @@ namespace RopeSnake.Mother3.IO
 
             return new Bg
             {
-                Unknown1 = unknown1,
-                Unknown2 = unknown2,
+                UnknownA = unknownA,
+                UnknownB = unknownB,
                 TileGrid = grid
             };
         }

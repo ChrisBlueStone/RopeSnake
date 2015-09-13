@@ -11,8 +11,8 @@ namespace RopeSnake.Mother3.RomStructures
     public sealed class Bg
     {
         public TileGrid TileGrid { get; set; }
-        public int Unknown1 { get; set; }
-        public int Unknown2 { get; set; }
+        public int UnknownA { get; set; }
+        public int UnknownB { get; set; }
 
         public static implicit operator TileGrid(Bg value) => value.TileGrid;
     }
