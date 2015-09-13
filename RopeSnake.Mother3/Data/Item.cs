@@ -8,6 +8,7 @@ namespace RopeSnake.Mother3.Data
 {
     public sealed class Item
     {
+        // Knowns
         public int Index { get; set; }
         public ItemType Type { get; set; }
         public bool Key { get; set; }
@@ -23,6 +24,20 @@ namespace RopeSnake.Mother3.Data
         public Dictionary<ElementalType, int> ElementalProtection { get; set; }
         public int LowerHp { get; set; }
         public int UpperHp { get; set; }
+        public int BattleTextIndex { get; set; }
+
+        // Unknowns
+        private byte[] unknownData = new byte[0x34];
+
+        public byte GetUnknown(int index)
+        {
+            return unknownData[index];
+        }
+
+        public void SetUnknown(int index, byte value)
+        {
+            unknownData[index] = value;
+        }
     }
 
     public enum ItemType
