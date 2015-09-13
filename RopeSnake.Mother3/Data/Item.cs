@@ -33,10 +33,10 @@ namespace RopeSnake.Mother3.Data
         Arms = 3,
         Food = 4,
         StatusHealer = 5,
-        Nausea = 6,
-        Fleas = 7,
-        Burned = 8,
-        Solidified = 9
+        BattleA = 6,
+        BattleB = 7,
+        ImportantA = 8,
+        ImportantB = 9
     }
 
     [Flags]
