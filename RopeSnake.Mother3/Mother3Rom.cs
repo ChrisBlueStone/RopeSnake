@@ -5,13 +5,14 @@ using System.Text;
 using System.Threading.Tasks;
 using RopeSnake.Gba;
 using RopeSnake.IO;
+using RopeSnake.Mother3.IO;
 using RopeSnake.Mother3.Data;
 
 namespace RopeSnake.Mother3
 {
     public sealed class Mother3Rom : GbaRom, IMother3Data
     {
-        private IGbaReader reader;
+        private IMother3Reader reader;
 
         public Mother3Version Version { get; set; }
 
@@ -27,11 +28,11 @@ namespace RopeSnake.Mother3
 
         private void Initialize()
         {
-            reader = new GbaReader(Source);
-            Version = DetectVersion(reader);
+            reader = new Mother3Reader(Source);
+            Version = DetectVersion();
         }
 
-        private Mother3Version DetectVersion(IBinaryReader reader)
+        private Mother3Version DetectVersion()
         {
             if (Header.Title != "MOTHER3" || Header.GameCode != "A3UJ")
                 return Mother3Version.Invalid;
