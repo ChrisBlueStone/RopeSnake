@@ -37,7 +37,7 @@ namespace RopeSnake.Mother3.IO
             string header = reader.ReadString(4);
 
             if (header != "bg  ")
-                throw new Exception("Unexpected header. Expected \"bg  \", actual \"" + header + "\"");
+                throw new Exception($"Unexpected header. Expected \"bg  \", actual \"{header}\"");
 
             // Read data
             int unknown1 = reader.ReadInt();
@@ -49,7 +49,7 @@ namespace RopeSnake.Mother3.IO
             string footer = reader.ReadString(4);
 
             if (footer != "~bg ")
-                throw new Exception("Unexpected footer. Expected \"~bg \", actual \"" + header + "\"");
+                throw new Exception($"Unexpected footer. Expected \"~bg \", actual \"{header}\"");
 
             return new Bg
             {

@@ -56,7 +56,7 @@ namespace RopeSnake.Gba
 
             // Check for LZ77 signature
             if (reader.ReadByte() != 0x10)
-                throw new Exception("Expected LZ77 header at position 0x" + start.ToString("X"));
+                throw new Exception($"Expected LZ77 header at position 0x{start:X}");
 
             // Read the block length
             int length = reader.ReadByte();
@@ -122,8 +122,7 @@ namespace RopeSnake.Gba
 
             // Check for correct size
             if (decomp.Length != width * height * 2)
-                throw new Exception("Decompressed block to " + decomp.Length + " bytes, but expected " +
-                    (width * height * 2).ToString() + " bytes");
+                throw new Exception($"Decompressed block to {decomp.Length} bytes, but expected {width * height * 2} bytes");
 
             return reader.ReadTileGrid(width, height, tileWidth, tileHeight);
         }
