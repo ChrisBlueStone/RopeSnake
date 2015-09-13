@@ -20,6 +20,8 @@ namespace RopeSnake.Mother3.IO
             set { reader.Position = value; }
         }
 
+        public Mother3Reader(ISource source) : this(new GbaReader(source)) { }
+
         public Mother3Reader(IGbaReader reader)
         {
             this.reader = reader;
