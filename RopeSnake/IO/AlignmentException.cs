@@ -12,7 +12,7 @@ namespace RopeSnake.IO
         public int ExpectedAlignment { get; set; }
 
         public AlignmentException(int offset, int alignment)
-            : base(string.Format("Invalid alignment of offset 0x{1:X}: must be aligned by {2}", offset, alignment))
+            : base(string.Format("Invalid alignment of offset 0x{0:X}: must be aligned by {1}", offset, alignment))
         { }
     }
 }
