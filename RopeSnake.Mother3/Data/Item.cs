@@ -23,10 +23,9 @@ namespace RopeSnake.Mother3.Data
         public Dictionary<ElementalType, int> ElementalProtection { get; set; }
         public int LowerHp { get; set; }
         public int UpperHp { get; set; }
-
     }
 
-    public enum ItemType : uint
+    public enum ItemType
     {
         Weapon = 0,
         Body = 1,
@@ -41,7 +40,7 @@ namespace RopeSnake.Mother3.Data
     }
 
     [Flags]
-    public enum EquipFlags : ushort
+    public enum EquipFlags
     {
         None = 0x0000,
         EmptyA = 0x0001,
@@ -62,7 +61,7 @@ namespace RopeSnake.Mother3.Data
         EmptyC = 0x8000
     }
 
-    public enum ProtectionType : int
+    public enum ProtectionType
     {
         Poison = 0,
         Paralysis = 1,
@@ -77,7 +76,7 @@ namespace RopeSnake.Mother3.Data
         Numb = 10
     }
 
-    public enum ElementalType : int
+    public enum ElementalType
     {
         Neutral = 0,
         Fire = 1,
