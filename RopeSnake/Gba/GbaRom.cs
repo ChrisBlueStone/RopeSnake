@@ -12,7 +12,7 @@ namespace RopeSnake.Gba
     {
         public GbaHeader Header { get; private set; }
 
-        public GbaRom(ISource source, RomSettings settings) : base(source, settings)
+        public GbaRom(ISource source) : base(source)
         {
             InitializeGba();
         }

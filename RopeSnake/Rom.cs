@@ -10,12 +10,10 @@ namespace RopeSnake
     public class Rom
     {
         public ISource Source { get; protected set; }
-        public RomSettings Settings { get; protected set; }
 
-        public Rom(ISource source, RomSettings settings)
+        public Rom(ISource source)
         {
             Source = source;
-            Settings = settings;
         }
     }
 }
