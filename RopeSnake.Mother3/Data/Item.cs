@@ -20,8 +20,8 @@ namespace RopeSnake.Mother3.Data
         public int Defense { get; set; }
         public int Iq { get; set; }
         public int Speed { get; set; }
-        public Dictionary<ProtectionType, int> AilmentProtection { get; set; }
-        public Dictionary<ElementalType, int> ElementalProtection { get; set; }
+        public FixedKeyDictionary<AilmentType, int> AilmentProtection { get; private set; }
+        public FixedKeyDictionary<ElementalType, int> ElementalProtection { get; private set; }
         public int LowerHp { get; set; }
         public int UpperHp { get; set; }
         public int BattleTextIndex { get; set; }
@@ -37,6 +37,15 @@ namespace RopeSnake.Mother3.Data
         public void SetUnknown(int index, byte value)
         {
             unknownData[index] = value;
+        }
+
+        public Item()
+        {
+            AilmentProtection = new FixedKeyDictionary<AilmentType, int>(
+                (AilmentType[])Enum.GetValues(typeof(AilmentType)));
+
+            ElementalProtection = new FixedKeyDictionary<ElementalType, int>(
+                (ElementalType[])Enum.GetValues(typeof(ElementalType)));
         }
     }
 
@@ -76,7 +85,7 @@ namespace RopeSnake.Mother3.Data
         EmptyC = 0x8000
     }
 
-    public enum ProtectionType
+    public enum AilmentType
     {
         Poison = 0,
         Paralysis = 1,

@@ -45,15 +45,16 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Data\IMother3Data.cs" />
+    <Compile Include="IO\IMother3Data.cs" />
     <Compile Include="Data\Item.cs" />
     <Compile Include="IO\IMother3Reader.cs" />
     <Compile Include="IO\Mother3Reader.cs" />
+    <Compile Include="IO\Mother3RomReader.cs" />
     <Compile Include="Mother3Rom.cs" />
     <Compile Include="Mother3RomSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RomStructures\Bg.cs" />
-    <Compile Include="RomStructures\SizeLoc.cs" />
+    <Compile Include="IO\Bg.cs" />
+    <Compile Include="IO\SizeLoc.cs" />
     <Compile Include="IO\TableInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -18,6 +18,7 @@ namespace RopeSnake.Mother3
 
         public Mother3Rom(ISource source, Mother3RomSettings settings) : base(source)
         {
+            Settings = settings;
             Initialize();
         }
 

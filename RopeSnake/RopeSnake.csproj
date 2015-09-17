@@ -44,6 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FixedKeyDictionary.cs" />
     <Compile Include="Gba\GbaHeader.cs" />
     <Compile Include="Gba\GbaReader.cs" />
     <Compile Include="Gba\GbaRom.cs" />
