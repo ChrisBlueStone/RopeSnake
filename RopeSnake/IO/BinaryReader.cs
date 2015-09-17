@@ -41,7 +41,7 @@ namespace RopeSnake.IO
         public uint ReadUInt() => (uint)(ReadByte() | (ReadByte() << 8) |
                 (ReadByte() << 16) | (ReadByte() << 24));
 
-        public int ReadInt() => (int)ReadInt();
+        public int ReadInt() => (int)ReadUInt();
 
         public int ReadInt(int offset) => (int)ReadUInt();
 
