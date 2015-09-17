@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RopeSnake.Mother3.RomStructures
+namespace RopeSnake.Mother3.IO
 {
     public struct SizeLoc
     {

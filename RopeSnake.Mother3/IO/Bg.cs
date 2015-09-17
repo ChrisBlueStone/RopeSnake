@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using RopeSnake.Gba;
 using RopeSnake.Graphics;
 
-namespace RopeSnake.Mother3.RomStructures
+namespace RopeSnake.Mother3.IO
 {
     public sealed class Bg
     {

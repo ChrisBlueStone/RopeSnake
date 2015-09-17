@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using RopeSnake.Gba;
 using RopeSnake.Graphics;
 using RopeSnake.IO;
-using RopeSnake.Mother3.RomStructures;
 
 namespace RopeSnake.Mother3.IO
 {

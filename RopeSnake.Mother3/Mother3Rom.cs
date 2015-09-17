@@ -10,20 +10,19 @@ using RopeSnake.Mother3.Data;
 
 namespace RopeSnake.Mother3
 {
-    public sealed class Mother3Rom : GbaRom, IMother3Data
+    public sealed class Mother3Rom : GbaRom
     {
-        private IMother3Reader reader;
-
         public Mother3Version Version { get; set; }
 
-        public Mother3Rom(ISource source) : base(source)
+        public Mother3RomSettings Settings { get; set; }
+
+        public Mother3Rom(ISource source, Mother3RomSettings settings) : base(source)
         {
             Initialize();
         }
 
         private void Initialize()
         {
-            reader = new Mother3Reader(Source);
             Version = DetectVersion();
         }
 
@@ -56,15 +55,6 @@ namespace RopeSnake.Mother3
                     return Mother3Version.None;
             }
         }
-
-        #region IMother3Data implementation
-
-        public Item ReadItem(int index)
-        {
-            throw new NotImplementedException();
-        }
-
-        #endregion
     }
 
     public enum Mother3Version
