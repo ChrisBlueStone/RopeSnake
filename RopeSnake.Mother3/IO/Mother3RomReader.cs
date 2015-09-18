@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using RopeSnake.Mother3.Data;
+using RopeSnake.Mother3.Text;
 
 namespace RopeSnake.Mother3.IO
 {
-    public class Mother3RomReader : IMother3Data
+    public class Mother3RomReader : IMother3Data, IMother3Text
     {
         private IMother3Reader reader;
         private Mother3Rom rom;
@@ -15,7 +16,60 @@ namespace RopeSnake.Mother3.IO
         public Mother3RomReader(Mother3Rom rom)
         {
             this.rom = rom;
-            reader = new Mother3Reader(rom.Source);
+
+            StringReader stringReader;
+
+            switch (rom.Settings.Version)
+            {
+                case Mother3Version.Japanese:
+                case Mother3Version.None:
+                case Mother3Version.Invalid:
+                    stringReader = new JapaneseStringReader(rom);
+                    break;
+
+                case Mother3Version.English10:
+                case Mother3Version.English11:
+                case Mother3Version.English12:
+                    stringReader = new EnglishStringReader(rom);
+                    break;
+
+                default:
+                    throw new Exception("Unrecognized ROM version");
+            }
+
+            reader = new Mother3Reader(rom.Source, stringReader);
+        }
+
+        private int ReadPointerFromOffsetTable(int tableAddress, int offsetIndex)
+        {
+            reader.Position = tableAddress;
+            int count = reader.ReadInt();
+
+            if (offsetIndex >= count)
+            {
+                throw new Exception($"The offset index {offsetIndex} exceeds the entry count {count}");
+            }
+
+            reader.Position += (offsetIndex * 4);
+            int offset = reader.ReadInt();
+
+            if (offset == 0)
+                return 0;
+
+            return offset + tableAddress;
+        }
+
+        private int GetFixedTablePointer(int tableAddress, int index, out FixedTableHeader header)
+        {
+            reader.Position = tableAddress;
+            header = reader.ReadFixedTableHeader();
+
+            if (index >= header.Count)
+            {
+                throw new Exception($"The index {index} exceeds the entry count {header.Count}");
+            }
+
+            return reader.Position + (index * header.EntryLength * 2);
         }
 
         #region IMother3Data implementation
@@ -74,6 +128,22 @@ namespace RopeSnake.Mother3.IO
                 item.SetUnknown(i + 38, reader.ReadByte());
 
             return item;
+        }
+
+        #endregion
+
+        #region IMother3Text implementation
+
+        public string ReadItemName(int index)
+        {
+            int textTableAddress = rom.Settings.BankAddresses["TextTable"];
+            int itemNamesTableAddress = ReadPointerFromOffsetTable(textTableAddress, 2);
+
+            FixedTableHeader header;
+            int namePointer = GetFixedTablePointer(itemNamesTableAddress, index, out header);
+
+            reader.Position = namePointer;
+            return reader.ReadSimpleString(header.EntryLength * 2);
         }
 
         #endregion

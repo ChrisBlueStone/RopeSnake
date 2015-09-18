@@ -6,12 +6,14 @@ using System.Threading.Tasks;
 using RopeSnake.Gba;
 using RopeSnake.Graphics;
 using RopeSnake.IO;
+using RopeSnake.Mother3.Text;
 
 namespace RopeSnake.Mother3.IO
 {
     public class Mother3Reader : IMother3Reader
     {
         private IGbaReader reader;
+        private StringReader stringReader;
 
         public int Position
         {
@@ -19,14 +21,23 @@ namespace RopeSnake.Mother3.IO
             set { reader.Position = value; }
         }
 
-        public Mother3Reader(ISource source) : this(new GbaReader(source)) { }
+        public Mother3Reader(ISource source, StringReader stringReader)
+            : this(new GbaReader(source), stringReader) { }
 
-        public Mother3Reader(IGbaReader reader)
+        public Mother3Reader(IGbaReader reader, StringReader stringReader)
         {
             this.reader = reader;
+            this.stringReader = stringReader;
         }
 
         #region IMother3Reader implementation
+
+        public FixedTableHeader ReadFixedTableHeader()
+        {
+            int entryLength = ReadUShort();
+            int count = ReadUShort();
+            return new FixedTableHeader(entryLength, count);
+        }
 
         public Bg ReadBg()
         {
@@ -58,6 +69,16 @@ namespace RopeSnake.Mother3.IO
                 UnknownB = unknownB,
                 TileGrid = grid
             };
+        }
+
+        public string ReadDialogString()
+        {
+            return stringReader.ReadDialogString(reader);
+        }
+
+        public string ReadSimpleString(int maxLength)
+        {
+            return stringReader.ReadSimpleString(reader, maxLength);
         }
 
         #endregion

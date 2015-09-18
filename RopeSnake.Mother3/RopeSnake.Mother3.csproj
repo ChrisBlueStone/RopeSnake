@@ -45,13 +45,18 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IO\FixedTableHeader.cs" />
     <Compile Include="IO\IMother3Data.cs" />
     <Compile Include="Data\Item.cs" />
     <Compile Include="IO\IMother3Reader.cs" />
+    <Compile Include="IO\IMother3Text.cs" />
     <Compile Include="IO\Mother3Reader.cs" />
     <Compile Include="IO\Mother3RomReader.cs" />
+    <Compile Include="Text\EnglishStringReader.cs" />
+    <Compile Include="Text\JapaneseStringReader.cs" />
+    <Compile Include="Text\StringReader.cs" />
     <Compile Include="Mother3Rom.cs" />
-    <Compile Include="Mother3RomSettings.cs" />
+    <Compile Include="RomSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="IO\Bg.cs" />
     <Compile Include="IO\SizeLoc.cs" />

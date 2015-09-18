@@ -10,11 +10,27 @@ namespace RopeSnake.IO
     {
         private ISource source;
 
+        private Func<ushort> ushortReader;
+        private Func<uint> uintReader;
+
         public int Position { get; set; }
 
-        public BinaryReader(ISource source)
+        public BinaryReader(ISource source) : this(source, false) { }
+
+        public BinaryReader(ISource source, bool bigEndian)
         {
             this.source = source;
+
+            if (bigEndian == true)
+            {
+                ushortReader = ReadUShortBigEndian;
+                uintReader = ReadUIntBigEndian;
+            }
+            else
+            {
+                ushortReader = ReadUShortLittleEndian;
+                uintReader = ReadUIntLittleEndian;
+            }
         }
 
         public byte[] ReadByteArray(int size)
@@ -34,12 +50,21 @@ namespace RopeSnake.IO
 
         public sbyte ReadSByte() => (sbyte)ReadByte();
 
-        public ushort ReadUShort() => (ushort)(ReadByte() | (ReadByte() << 8));
+        public ushort ReadUShort() => ushortReader();
+
+        private ushort ReadUShortLittleEndian() => (ushort)(ReadByte() | (ReadByte() << 8));
+
+        private ushort ReadUShortBigEndian() => (ushort)((ReadByte() << 8) | ReadByte());
 
         public short ReadShort() => (short)ReadUShort();
 
-        public uint ReadUInt() => (uint)(ReadByte() | (ReadByte() << 8) |
+        public uint ReadUInt() => uintReader();
+
+        private uint ReadUIntLittleEndian() => (uint)(ReadByte() | (ReadByte() << 8) |
                 (ReadByte() << 16) | (ReadByte() << 24));
+
+        private uint ReadUIntBigEndian() => (uint)((ReadByte() << 24) | (ReadByte() << 16) |
+            (ReadByte() << 8) | ReadByte());
 
         public int ReadInt() => (int)ReadUInt();
 

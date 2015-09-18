@@ -9,6 +9,9 @@ namespace RopeSnake.Mother3.IO
 {
     public interface IMother3Reader : IGbaReader
     {
+        FixedTableHeader ReadFixedTableHeader();
         Bg ReadBg();
+        string ReadDialogString();
+        string ReadSimpleString(int maxLength);
     }
 }

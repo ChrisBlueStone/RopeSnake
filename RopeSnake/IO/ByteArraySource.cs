@@ -35,12 +35,5 @@ namespace RopeSnake.IO
         {
             _array[offset] = value;
         }
-
-        public string ComputeSHA256(int offset, int count)
-        {
-            SHA256Managed sha = new SHA256Managed();
-            byte[] hash = sha.ComputeHash(_array, offset, count);
-            return string.Join("", hash.Select(b => b.ToString("x2")));
-        }
     }
 }

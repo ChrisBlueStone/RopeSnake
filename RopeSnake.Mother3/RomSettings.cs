@@ -9,16 +9,18 @@ using YamlDotNet.Serialization;
 
 namespace RopeSnake.Mother3
 {
-    public class Mother3RomSettings
+    public class RomSettings
     {
+        public Mother3Version Version { get; set; }
         public Dictionary<string, TableInfo> DataTables { get; set; } = new Dictionary<string, TableInfo>();
+        public Dictionary<string, int> BankAddresses { get; set; } = new Dictionary<string, int>();
 
-        public static Mother3RomSettings FromYaml(string yamlPath)
+        public static RomSettings FromYaml(string yamlPath)
         {
             using (var reader = File.OpenText(yamlPath))
             {
                 Deserializer deserializer = new Deserializer();
-                return deserializer.Deserialize<Mother3RomSettings>(reader);
+                return deserializer.Deserialize<RomSettings>(reader);
             }
         }
 

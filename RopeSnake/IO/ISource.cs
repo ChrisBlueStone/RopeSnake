@@ -12,7 +12,5 @@ namespace RopeSnake.IO
 
         byte GetByte(int offset);
         void SetByte(int offset, byte value);
-
-        string ComputeSHA256(int offset, int count);
     }
 }
