@@ -11,13 +11,19 @@ using RopeSnake.Mother3.Text;
 
 namespace RopeSnake.Mother3.IO
 {
-    public class Mother3RomReader : IMother3Data, IMother3Text
+    internal class Mother3Reader : IMother3Reader
     {
         private IGbaReader reader;
         private Mother3Rom rom;
         private StringReader stringReader;
 
-        public Mother3RomReader(Mother3Rom rom)
+        public int Position
+        {
+            get { return reader.Position; }
+            set { reader.Position = value; }
+        }
+
+        public Mother3Reader(Mother3Rom rom)
         {
             reader = new GbaReader(rom.Source);
             this.rom = rom;
@@ -41,16 +47,16 @@ namespace RopeSnake.Mother3.IO
             }
         }
 
-        #region Internal methods
+        #region IMother3Reader implementation
 
-        internal FixedTableHeader ReadFixedTableHeader()
+        public FixedTableHeader ReadFixedTableHeader()
         {
             int entryLength = reader.ReadUShort();
             int count = reader.ReadUShort();
             return new FixedTableHeader(entryLength, count);
         }
 
-        internal Bg ReadBg()
+        public Bg ReadBg()
         {
             // Check for alignment
             if (!reader.Position.IsAligned(4))
@@ -82,47 +88,8 @@ namespace RopeSnake.Mother3.IO
             };
         }
 
-        internal int ReadPointerFromOffsetTable(int tableAddress, int offsetIndex)
+        public Item ReadItem()
         {
-            reader.Position = tableAddress;
-            int count = reader.ReadInt();
-
-            if (offsetIndex >= count)
-            {
-                throw new Exception($"The offset index {offsetIndex} exceeds the entry count {count}");
-            }
-
-            reader.Position += (offsetIndex * 4);
-            int offset = reader.ReadInt();
-
-            if (offset == 0)
-                return 0;
-
-            return offset + tableAddress;
-        }
-
-        internal int GetFixedTablePointer(int tableAddress, int index, out FixedTableHeader header)
-        {
-            reader.Position = tableAddress;
-            header = ReadFixedTableHeader();
-
-            if (index >= header.Count)
-            {
-                throw new Exception($"The index {index} exceeds the entry count {header.Count}");
-            }
-
-            return reader.Position + (index * header.EntryLength * 2);
-        }
-
-        #endregion
-
-        #region IMother3Data implementation
-
-        public Item ReadItem(int index)
-        {
-            TableInfo tableInfo = rom.Settings.DataTables["Items"];
-            reader.Position = tableInfo.Address + (index * tableInfo.EntryLength);
-
             Item item = new Item();
 
             item.Index = reader.ReadInt();
@@ -174,21 +141,57 @@ namespace RopeSnake.Mother3.IO
             return item;
         }
 
+        public string ReadDialogString() => stringReader.ReadDialogString(reader);
+
+        public string ReadCodedString(int maxLength) => stringReader.ReadCodedString(reader, maxLength);
+
         #endregion
 
-        #region IMother3Text implementation
+        #region IGbaReader implementation
 
-        public string ReadItemName(int index)
-        {
-            int textTableAddress = rom.Settings.BankAddresses["TextTable"];
-            int itemNamesTableAddress = ReadPointerFromOffsetTable(textTableAddress, 2);
+        public ByteArraySource ReadCompressed() => reader.ReadCompressed();
 
-            FixedTableHeader header;
-            int namePointer = GetFixedTablePointer(itemNamesTableAddress, index, out header);
+        public TileSet ReadCompressedTileSet(int bitDepth) => reader.ReadCompressedTileSet(bitDepth);
 
-            reader.Position = namePointer;
-            return stringReader.ReadString(reader, header.EntryLength * 2);
-        }
+        public TileGrid ReadCompressedTileGrid(int width, int height, int tileWidth, int tileHeight)
+            => reader.ReadCompressedTileGrid(width, height, tileWidth, tileHeight);
+
+        public GbaHeader ReadHeader() => reader.ReadHeader();
+
+        public int ReadPointer() => reader.ReadPointer();
+
+        public Color ReadColor() => reader.ReadColor();
+
+        public Palette ReadPalette(int paletteCount, int colorCount) => reader.ReadPalette(paletteCount, colorCount);
+
+        public Tile ReadTile(int bitDepth) => reader.ReadTile(bitDepth);
+
+        public TileSet ReadTileSet(int length, int bitDepth) => reader.ReadTileSet(length, bitDepth);
+
+        public TileProperties ReadTileProperties() => reader.ReadTileProperties();
+
+        public TileGrid ReadTileGrid(int width, int height, int tileWidth, int tileHeight)
+            => reader.ReadTileGrid(width, height, tileWidth, tileHeight);
+
+        public byte[] ReadByteArray(int size) => reader.ReadByteArray(size);
+
+        public ByteArraySource ReadByteArraySource(int size) => reader.ReadByteArraySource(size);
+
+        public int ReadInt() => reader.ReadInt();
+
+        public byte ReadByte() => reader.ReadByte();
+
+        public sbyte ReadSByte() => reader.ReadSByte();
+
+        public short ReadShort() => reader.ReadShort();
+
+        public string ReadString() => reader.ReadString();
+
+        public string ReadString(int maxLength) => reader.ReadString(maxLength);
+
+        public uint ReadUInt() => reader.ReadUInt();
+
+        public ushort ReadUShort() => reader.ReadUShort();
 
         #endregion
     }

@@ -18,6 +18,6 @@ namespace RopeSnake.Mother3.Text
 
         public abstract string ReadDialogString(IBinaryReader reader);
 
-        public abstract string ReadString(IBinaryReader reader, int maxLength);
+        public abstract string ReadCodedString(IBinaryReader reader, int maxLength);
     }
 }

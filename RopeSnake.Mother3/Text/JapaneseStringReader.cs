@@ -34,7 +34,7 @@ namespace RopeSnake.Mother3.Text
             throw new NotImplementedException();
         }
 
-        public override string ReadString(IBinaryReader reader, int maxLength)
+        public override string ReadCodedString(IBinaryReader reader, int maxLength)
         {
             // TODO: control codes
             StringBuilder sb = new StringBuilder();
