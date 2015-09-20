@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using RopeSnake.Gba;
+using RopeSnake.Graphics;
+using RopeSnake.IO;
 using RopeSnake.Mother3.Data;
 using RopeSnake.Mother3.Text;
 
@@ -10,37 +13,76 @@ namespace RopeSnake.Mother3.IO
 {
     public class Mother3RomReader : IMother3Data, IMother3Text
     {
-        private IMother3Reader reader;
+        private IGbaReader reader;
         private Mother3Rom rom;
+        private StringReader stringReader;
 
         public Mother3RomReader(Mother3Rom rom)
         {
+            reader = new GbaReader(rom.Source);
             this.rom = rom;
-
-            StringReader stringReader;
 
             switch (rom.Settings.Version)
             {
                 case Mother3Version.Japanese:
                 case Mother3Version.None:
                 case Mother3Version.Invalid:
-                    stringReader = new JapaneseStringReader(rom);
+                    stringReader = new JapaneseStringReader(rom, reader);
                     break;
 
                 case Mother3Version.English10:
                 case Mother3Version.English11:
                 case Mother3Version.English12:
-                    stringReader = new EnglishStringReader(rom);
+                    stringReader = new EnglishStringReader(rom, reader);
                     break;
 
                 default:
                     throw new Exception("Unrecognized ROM version");
             }
-
-            reader = new Mother3Reader(rom.Source, stringReader);
         }
 
-        private int ReadPointerFromOffsetTable(int tableAddress, int offsetIndex)
+        #region Internal methods
+
+        internal FixedTableHeader ReadFixedTableHeader()
+        {
+            int entryLength = reader.ReadUShort();
+            int count = reader.ReadUShort();
+            return new FixedTableHeader(entryLength, count);
+        }
+
+        internal Bg ReadBg()
+        {
+            // Check for alignment
+            if (!reader.Position.IsAligned(4))
+                throw new AlignmentException(reader.Position, 4);
+
+            // Check for "bg  " header
+            string header = reader.ReadString(4);
+
+            if (header != "bg  ")
+                throw new Exception($"Unexpected header. Expected \"bg  \", actual \"{header}\"");
+
+            // Read data
+            int unknownA = reader.ReadInt();
+            int unknownB = reader.ReadInt();
+            TileGrid grid = reader.ReadCompressedTileGrid(32, 32, 8, 8);
+
+            // Check for "~bg " footer
+            reader.Position = reader.Position.Align(4);
+            string footer = reader.ReadString(4);
+
+            if (footer != "~bg ")
+                throw new Exception($"Unexpected footer. Expected \"~bg \", actual \"{header}\"");
+
+            return new Bg
+            {
+                UnknownA = unknownA,
+                UnknownB = unknownB,
+                TileGrid = grid
+            };
+        }
+
+        internal int ReadPointerFromOffsetTable(int tableAddress, int offsetIndex)
         {
             reader.Position = tableAddress;
             int count = reader.ReadInt();
@@ -59,10 +101,10 @@ namespace RopeSnake.Mother3.IO
             return offset + tableAddress;
         }
 
-        private int GetFixedTablePointer(int tableAddress, int index, out FixedTableHeader header)
+        internal int GetFixedTablePointer(int tableAddress, int index, out FixedTableHeader header)
         {
             reader.Position = tableAddress;
-            header = reader.ReadFixedTableHeader();
+            header = ReadFixedTableHeader();
 
             if (index >= header.Count)
             {
@@ -71,6 +113,8 @@ namespace RopeSnake.Mother3.IO
 
             return reader.Position + (index * header.EntryLength * 2);
         }
+
+        #endregion
 
         #region IMother3Data implementation
 
@@ -143,7 +187,7 @@ namespace RopeSnake.Mother3.IO
             int namePointer = GetFixedTablePointer(itemNamesTableAddress, index, out header);
 
             reader.Position = namePointer;
-            return reader.ReadSimpleString(header.EntryLength * 2);
+            return stringReader.ReadString(header.EntryLength * 2);
         }
 
         #endregion

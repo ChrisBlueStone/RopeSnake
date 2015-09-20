@@ -7,16 +7,16 @@ using RopeSnake.IO;
 
 namespace RopeSnake.Mother3.Text
 {
-    public class EnglishStringReader : StringReader
+    internal class EnglishStringReader : StringReader
     {
-        public EnglishStringReader(Mother3Rom rom) : base(rom) { }
+        public EnglishStringReader(Mother3Rom rom, IBinaryReader reader) : base(rom, reader) { }
 
-        public override string ReadDialogString(IBinaryReader reader)
+        public override string ReadDialogString()
         {
             throw new NotImplementedException();
         }
 
-        public override string ReadSimpleString(IBinaryReader reader, int maxLength)
+        public override string ReadString(int maxLength)
         {
             throw new NotImplementedException();
         }

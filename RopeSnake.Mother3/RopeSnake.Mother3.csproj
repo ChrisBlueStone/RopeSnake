@@ -48,9 +48,7 @@
     <Compile Include="IO\FixedTableHeader.cs" />
     <Compile Include="IO\IMother3Data.cs" />
     <Compile Include="Data\Item.cs" />
-    <Compile Include="IO\IMother3Reader.cs" />
     <Compile Include="IO\IMother3Text.cs" />
-    <Compile Include="IO\Mother3Reader.cs" />
     <Compile Include="IO\Mother3RomReader.cs" />
     <Compile Include="Text\EnglishStringReader.cs" />
     <Compile Include="Text\JapaneseStringReader.cs" />

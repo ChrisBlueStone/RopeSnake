@@ -8,7 +8,7 @@ using RopeSnake.Graphics;
 
 namespace RopeSnake.Mother3.IO
 {
-    public sealed class Bg
+    internal sealed class Bg
     {
         public TileGrid TileGrid { get; set; }
         public int UnknownA { get; set; }
