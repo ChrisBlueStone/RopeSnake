@@ -15,6 +15,10 @@ namespace RopeSnake.Mother3.IO
     {
         private IGbaReader reader;
         private Mother3Rom rom;
+
+        // Strings are complicated, so the implementation of ReadDialogString and ReadCodedString are deferred
+        // to a separate class called StringReader, of which there may be different implementations depending
+        // on which language the ROM is in
         private StringReader stringReader;
 
         public int Position

@@ -9,18 +9,14 @@ namespace RopeSnake.Mother3.Data
 {
     public class DataBank
     {
-        private Mother3Rom rom;
-
         public List<Item> Items { get; set; } = new List<Item>();
 
         public DataBank(Mother3Rom rom)
         {
-            this.rom = rom;
-
-            ReadItems();
+            ReadItems(rom);
         }
 
-        private void ReadItems()
+        private void ReadItems(Mother3Rom rom)
         {
             IMother3Reader reader = new Mother3Reader(rom);
 

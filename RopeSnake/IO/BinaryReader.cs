@@ -41,10 +41,7 @@ namespace RopeSnake.IO
             return bytes;
         }
 
-        public ByteArraySource ReadByteArraySource(int size)
-        {
-            return new ByteArraySource(ReadByteArray(size));
-        }
+        public ByteArraySource ReadByteArraySource(int size) => new ByteArraySource(ReadByteArray(size));
 
         public byte ReadByte() => source.GetByte(Position++);
 
