@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace RopeSnake.Mother3.Data
 {
+    // TODO: maybe some sub-classing based on item type? needs more investigation
     public sealed class Item
     {
         // Knowns

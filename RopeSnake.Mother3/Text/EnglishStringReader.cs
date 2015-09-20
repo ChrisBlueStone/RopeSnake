@@ -9,6 +9,13 @@ namespace RopeSnake.Mother3.Text
 {
     internal class EnglishStringReader : StringReader
     {
+        private static Dictionary<byte, string> charLookup = new Dictionary<byte, string>();
+
+        static EnglishStringReader()
+        {
+            // TODO: charLookup
+        }
+
         public EnglishStringReader(Mother3Rom rom) : base(rom) { }
 
         public override string ReadDialogString(IBinaryReader reader)
@@ -18,7 +25,17 @@ namespace RopeSnake.Mother3.Text
 
         public override string ReadString(IBinaryReader reader, int maxLength)
         {
-            throw new NotImplementedException();
+            // TODO: control codes
+            StringBuilder sb = new StringBuilder();
+            int count = 0;
+            short ch;
+
+            while ((ch = reader.ReadShort()) >= 0 && count++ < maxLength)
+            {
+                sb.Append(charLookup[(byte)ch]);
+            }
+
+            return sb.ToString();
         }
     }
 }
