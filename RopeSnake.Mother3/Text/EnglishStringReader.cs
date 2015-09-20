@@ -9,14 +9,14 @@ namespace RopeSnake.Mother3.Text
 {
     internal class EnglishStringReader : StringReader
     {
-        public EnglishStringReader(Mother3Rom rom, IBinaryReader reader) : base(rom, reader) { }
+        public EnglishStringReader(Mother3Rom rom) : base(rom) { }
 
-        public override string ReadDialogString()
+        public override string ReadDialogString(IBinaryReader reader)
         {
             throw new NotImplementedException();
         }
 
-        public override string ReadString(int maxLength)
+        public override string ReadString(IBinaryReader reader, int maxLength)
         {
             throw new NotImplementedException();
         }

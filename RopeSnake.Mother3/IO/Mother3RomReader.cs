@@ -27,13 +27,13 @@ namespace RopeSnake.Mother3.IO
                 case Mother3Version.Japanese:
                 case Mother3Version.None:
                 case Mother3Version.Invalid:
-                    stringReader = new JapaneseStringReader(rom, reader);
+                    stringReader = new JapaneseStringReader(rom);
                     break;
 
                 case Mother3Version.English10:
                 case Mother3Version.English11:
                 case Mother3Version.English12:
-                    stringReader = new EnglishStringReader(rom, reader);
+                    stringReader = new EnglishStringReader(rom);
                     break;
 
                 default:
@@ -187,7 +187,7 @@ namespace RopeSnake.Mother3.IO
             int namePointer = GetFixedTablePointer(itemNamesTableAddress, index, out header);
 
             reader.Position = namePointer;
-            return stringReader.ReadString(header.EntryLength * 2);
+            return stringReader.ReadString(reader, header.EntryLength * 2);
         }
 
         #endregion

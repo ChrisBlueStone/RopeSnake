@@ -10,16 +10,14 @@ namespace RopeSnake.Mother3.Text
     internal abstract class StringReader
     {
         protected Mother3Rom rom;
-        protected IBinaryReader reader;
 
-        protected StringReader(Mother3Rom rom, IBinaryReader reader)
+        protected StringReader(Mother3Rom rom)
         {
             this.rom = rom;
-            this.reader = reader;
         }
 
-        public abstract string ReadDialogString();
+        public abstract string ReadDialogString(IBinaryReader reader);
 
-        public abstract string ReadString(int maxLength);
+        public abstract string ReadString(IBinaryReader reader, int maxLength);
     }
 }
