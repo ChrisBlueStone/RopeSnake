@@ -11,18 +11,12 @@ namespace RopeSnake.Mother3.Data
 {
     public class DataBank
     {
-        private Dictionary<string, object> fileMap = new Dictionary<string, object>();
+        [JsonFile("items.json")]
         public List<Item> Items { get; set; } = new List<Item>();
 
         public DataBank(Mother3Rom rom)
         {
             ReadItems(rom);
-            PopulateFileMap();
-        }
-
-        private void PopulateFileMap()
-        {
-            fileMap.Add("items.json", Items);
         }
 
         private void ReadItems(Mother3Rom rom)
@@ -38,7 +32,7 @@ namespace RopeSnake.Mother3.Data
 
         public void WriteJson(string projectDirectory)
         {
-            Helpers.WriteDataBanks(projectDirectory, "data", fileMap);
+            Helpers.WriteDataBanks(projectDirectory, "data", this);
         }
     }
 }

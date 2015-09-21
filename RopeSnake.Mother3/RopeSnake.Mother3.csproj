@@ -50,6 +50,7 @@
     <Compile Include="Data\Item.cs" />
     <Compile Include="IO\Helpers.cs" />
     <Compile Include="IO\IMother3Reader.cs" />
+    <Compile Include="IO\JsonFileAttribute.cs" />
     <Compile Include="IO\Mother3Reader.cs" />
     <Compile Include="Text\EnglishStringReader.cs" />
     <Compile Include="Text\JapaneseStringReader.cs" />
