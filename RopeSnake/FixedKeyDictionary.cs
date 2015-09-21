@@ -4,9 +4,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace RopeSnake
 {
+    [JsonDictionary]
     public class FixedKeyDictionary<K, V> : IDictionary<K, V>
     {
         private IDictionary<K, V> dict = new Dictionary<K, V>();

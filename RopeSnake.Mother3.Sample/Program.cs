@@ -18,11 +18,11 @@ namespace RopeSnake.Mother3.Sample
         static void Main(string[] args)
         {
             ByteArraySource source = new ByteArraySource("mother3_jp.gba");
-            RomSettings settings = RomSettings.FromYaml("mother3_jp.yml");
+            RomSettings settings = new RomSettings("mother3_jp.json");
             Mother3Rom rom = new Mother3Rom(source, settings);
 
             DataBank data = new DataBank(rom);
-            Item mysticalStick = data.Items[12];
+            data.WriteJson("project");
         }
     }
 }

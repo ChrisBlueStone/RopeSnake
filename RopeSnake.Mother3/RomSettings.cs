@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.IO;
 using RopeSnake.Mother3.IO;
-using YamlDotNet.Serialization;
+using Newtonsoft.Json;
 
 namespace RopeSnake.Mother3
 {
@@ -15,21 +15,12 @@ namespace RopeSnake.Mother3
         public Dictionary<string, TableInfo> DataTables { get; set; } = new Dictionary<string, TableInfo>();
         public Dictionary<string, int> BankAddresses { get; set; } = new Dictionary<string, int>();
 
-        public static RomSettings FromYaml(string yamlPath)
+        public RomSettings(string jsonPath)
         {
-            using (var reader = File.OpenText(yamlPath))
+            using (var reader = File.OpenText(jsonPath))
             {
-                Deserializer deserializer = new Deserializer();
-                return deserializer.Deserialize<RomSettings>(reader);
-            }
-        }
-
-        public void WriteYaml(string yamlPath)
-        {
-            using (var writer = File.CreateText(yamlPath))
-            {
-                Serializer serializer = new Serializer();
-                serializer.Serialize(writer, this);
+                JsonSerializer serializer = new JsonSerializer();
+                serializer.Populate(reader, this);
             }
         }
     }
