@@ -8,9 +8,9 @@ using System.Reflection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 
-namespace RopeSnake.Mother3.IO
+namespace RopeSnake.Project
 {
-    public static class Helpers
+    public static class ProjectHelpers
     {
         public static void ReadJsonFiles(string projectFolder, string subFolder, object destination)
         {

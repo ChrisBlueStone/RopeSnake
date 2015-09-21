@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RopeSnake.Mother3.IO
+namespace RopeSnake.Project
 {
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
     public class JsonFileAttribute : Attribute

@@ -69,6 +69,10 @@
     <Compile Include="IO\IBinaryReader.cs" />
     <Compile Include="IO\IOHelpers.cs" />
     <Compile Include="IO\ISource.cs" />
+    <Compile Include="Project\ByteArrayConverter.cs" />
+    <Compile Include="Project\IModule.cs" />
+    <Compile Include="Project\ProjectHelpers.cs" />
+    <Compile Include="Project\JsonFileAttribute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Rom.cs" />
   </ItemGroup>

@@ -21,8 +21,8 @@ namespace RopeSnake.Mother3.Sample
             RomSettings settings = new RomSettings("mother3_jp.json");
             Mother3Rom rom = new Mother3Rom(source, settings);
 
-            DataBank data = new DataBank(rom);
-            data.WriteJson("project");
+            DataModule data = new DataModule(rom);
+            data.WriteJsonFiles("project");
         }
     }
 }

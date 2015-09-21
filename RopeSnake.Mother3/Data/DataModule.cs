@@ -4,22 +4,28 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using RopeSnake.Project;
 using RopeSnake.Mother3.IO;
 using Newtonsoft.Json;
 
 namespace RopeSnake.Mother3.Data
 {
-    public class DataBank
+    public class DataModule : IModule
     {
         [JsonFile("items.json")]
         public List<Item> Items { get; set; }
 
-        public DataBank(string projectDirectory)
+        public DataModule()
         {
-            ReadJson(projectDirectory);
+
         }
 
-        public DataBank(Mother3Rom rom)
+        public DataModule(string projectDirectory)
+        {
+            ReadJsonFiles(projectDirectory);
+        }
+
+        public DataModule(Mother3Rom rom)
         {
             ReadItems(rom);
         }
@@ -36,14 +42,14 @@ namespace RopeSnake.Mother3.Data
                 Items.Add(reader.ReadItem());
         }
 
-        private void ReadJson(string projectDirectory)
+        public void ReadJsonFiles(string projectDirectory)
         {
-            Helpers.ReadJsonFiles(projectDirectory, "data", this);
+            ProjectHelpers.ReadJsonFiles(projectDirectory, "data", this);
         }
 
-        public void WriteJson(string projectDirectory)
+        public void WriteJsonFiles(string projectDirectory)
         {
-            Helpers.WriteJsonFiles(projectDirectory, "data", this);
+            ProjectHelpers.WriteJsonFiles(projectDirectory, "data", this);
         }
     }
 }

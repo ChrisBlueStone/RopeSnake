@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
-namespace RopeSnake.Mother3.IO
+namespace RopeSnake.Project
 {
     // Reference: http://stackoverflow.com/a/15228384/1188632
     public class ByteArrayConverter : JsonConverter
