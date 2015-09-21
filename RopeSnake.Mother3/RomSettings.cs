@@ -12,8 +12,9 @@ namespace RopeSnake.Mother3
     public class RomSettings
     {
         public Mother3Version Version { get; set; }
-        public Dictionary<string, TableInfo> DataTables { get; set; } = new Dictionary<string, TableInfo>();
-        public Dictionary<string, int> BankAddresses { get; set; } = new Dictionary<string, int>();
+        public Dictionary<string, TableInfo> DataTables { get; set; }
+        public Dictionary<string, int> BankAddresses { get; set; }
+        public Dictionary<short, string> CharLookup { get; set; }
 
         public RomSettings(string jsonPath)
         {

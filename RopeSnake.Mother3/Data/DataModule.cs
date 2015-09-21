@@ -15,14 +15,11 @@ namespace RopeSnake.Mother3.Data
         [ModuleFile("items")]
         public List<Item> Items { get; set; }
 
-        public DataModule()
-        {
+        public DataModule() { }
 
-        }
-
-        public DataModule(string projectDirectory)
+        public DataModule(string projectFolder)
         {
-            ReadModule(projectDirectory);
+            ReadModule(projectFolder);
         }
 
         public DataModule(Mother3Rom rom)
@@ -42,14 +39,14 @@ namespace RopeSnake.Mother3.Data
                 Items.Add(reader.ReadItem());
         }
 
-        public void ReadModule(string projectDirectory)
+        public void ReadModule(string projectFolder)
         {
-            ProjectHelpers.ReadJsonFiles(projectDirectory, "data", this);
+            ProjectHelpers.ReadJsonFiles(projectFolder, "data", this);
         }
 
-        public void WriteModule(string projectDirectory)
+        public void WriteModule(string projectFolder)
         {
-            ProjectHelpers.WriteJsonFiles(projectDirectory, "data", this);
+            ProjectHelpers.WriteJsonFiles(projectFolder, "data", this);
         }
     }
 }

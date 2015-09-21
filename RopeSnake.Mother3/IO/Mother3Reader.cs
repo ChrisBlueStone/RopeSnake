@@ -11,7 +11,7 @@ using RopeSnake.Mother3.Text;
 
 namespace RopeSnake.Mother3.IO
 {
-    internal class Mother3Reader : IMother3Reader
+    public class Mother3Reader : IMother3Reader
     {
         private IGbaReader reader;
         private Mother3Rom rom;
@@ -148,6 +148,23 @@ namespace RopeSnake.Mother3.IO
         public string ReadDialogString() => stringReader.ReadDialogString(reader);
 
         public string ReadCodedString(int maxLength) => stringReader.ReadCodedString(reader, maxLength);
+
+        public int[] ReadOffsetTable()
+        {
+            int basePosition = Position;
+            int count = ReadInt();
+            int[] offsets = new int[count + 1];
+
+            // There's always an extra offset at the end denoting the address just
+            // after the table
+            for (int i = 0; i <= count; i++)
+            {
+                int offset = ReadInt();
+                offsets[i] = basePosition + offset;
+            }
+
+            return offsets;
+        }
 
         #endregion
 

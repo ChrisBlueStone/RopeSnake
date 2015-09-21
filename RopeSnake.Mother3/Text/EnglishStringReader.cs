@@ -7,32 +7,50 @@ using RopeSnake.IO;
 
 namespace RopeSnake.Mother3.Text
 {
-    internal class EnglishStringReader : StringReader
+    public class EnglishStringReader : StringReader
     {
-        private static Dictionary<byte, string> charLookup = new Dictionary<byte, string>();
+        private Dictionary<short, string> charLookup = new Dictionary<short, string>();
 
-        static EnglishStringReader()
+        public EnglishStringReader(Mother3Rom rom) : base(rom)
         {
-            // TODO: charLookup
+            charLookup = rom.Settings.CharLookup;
+            if (charLookup == null)
+            {
+                throw new Exception("The character lookup is null");
+            }
         }
-
-        public EnglishStringReader(Mother3Rom rom) : base(rom) { }
 
         public override string ReadDialogString(IBinaryReader reader)
         {
             throw new NotImplementedException();
         }
 
+        public override string ReadCodedString(IBinaryReader reader)
+        {
+            return ReadCodedStringInternal(reader, null);
+        }
+
         public override string ReadCodedString(IBinaryReader reader, int maxLength)
+        {
+            return ReadCodedStringInternal(reader, maxLength);
+        }
+
+        internal string ReadCodedStringInternal(IBinaryReader reader, int? maxLength)
         {
             // TODO: control codes
             StringBuilder sb = new StringBuilder();
             int count = 0;
             short ch;
 
-            while ((ch = reader.ReadShort()) >= 0 && count++ < maxLength)
+            while ((maxLength.HasValue && count++ < maxLength) && (ch = reader.ReadShort()) >= 0)
             {
-                sb.Append(charLookup[(byte)ch]);
+                sb.Append(charLookup[ch]);
+            }
+
+            // Advance the position past the end of the string if applicable
+            while (maxLength.HasValue && count++ < maxLength)
+            {
+                reader.ReadUShort();
             }
 
             return sb.ToString();

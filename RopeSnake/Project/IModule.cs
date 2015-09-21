@@ -8,7 +8,7 @@ namespace RopeSnake.Project
 {
     public interface IModule
     {
-        void ReadModule(string projectDirectory);
-        void WriteModule(string projectDirectory);
+        void ReadModule(string projectFolder);
+        void WriteModule(string projectFolder);
     }
 }

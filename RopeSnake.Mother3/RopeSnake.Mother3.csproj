@@ -59,6 +59,7 @@
     <Compile Include="IO\Bg.cs" />
     <Compile Include="IO\SizeLoc.cs" />
     <Compile Include="IO\TableInfo.cs" />
+    <Compile Include="Text\TextModule.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\RopeSnake\RopeSnake.csproj">

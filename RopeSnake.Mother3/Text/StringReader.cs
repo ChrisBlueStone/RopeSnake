@@ -7,7 +7,7 @@ using RopeSnake.IO;
 
 namespace RopeSnake.Mother3.Text
 {
-    internal abstract class StringReader
+    public abstract class StringReader
     {
         protected Mother3Rom rom;
 
@@ -17,6 +17,8 @@ namespace RopeSnake.Mother3.Text
         }
 
         public abstract string ReadDialogString(IBinaryReader reader);
+
+        public abstract string ReadCodedString(IBinaryReader reader);
 
         public abstract string ReadCodedString(IBinaryReader reader, int maxLength);
     }

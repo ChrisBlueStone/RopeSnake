@@ -7,7 +7,7 @@ using RopeSnake.IO;
 
 namespace RopeSnake.Mother3.Text
 {
-    internal sealed class JapaneseStringReader : StringReader
+    public sealed class JapaneseStringReader : StringReader
     {
         private Dictionary<short, string> charLookup = new Dictionary<short, string>();
 
@@ -34,16 +34,32 @@ namespace RopeSnake.Mother3.Text
             throw new NotImplementedException();
         }
 
+        public override string ReadCodedString(IBinaryReader reader)
+        {
+            return ReadCodedStringInternal(reader, null);
+        }
+
         public override string ReadCodedString(IBinaryReader reader, int maxLength)
+        {
+            return ReadCodedStringInternal(reader, maxLength);
+        }
+
+        internal string ReadCodedStringInternal(IBinaryReader reader, int? maxLength)
         {
             // TODO: control codes
             StringBuilder sb = new StringBuilder();
             int count = 0;
             short ch;
 
-            while ((ch = reader.ReadShort()) >= 0 && count++ < maxLength)
+            while ((maxLength.HasValue && count++ < maxLength) && (ch = reader.ReadShort()) >= 0)
             {
                 sb.Append(charLookup[ch]);
+            }
+
+            // Advance the reader past the end of the string if applicable
+            while (maxLength.HasValue && count++ < maxLength)
+            {
+                reader.ReadUShort();
             }
 
             return sb.ToString();

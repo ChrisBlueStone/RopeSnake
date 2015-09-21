@@ -8,12 +8,13 @@ using RopeSnake.Mother3.Data;
 
 namespace RopeSnake.Mother3.IO
 {
-    internal interface IMother3Reader : IGbaReader
+    public interface IMother3Reader : IGbaReader
     {
         FixedTableHeader ReadFixedTableHeader();
         Item ReadItem();
         Bg ReadBg();
         string ReadDialogString();
         string ReadCodedString(int maxLength);
+        int[] ReadOffsetTable();
     }
 }
