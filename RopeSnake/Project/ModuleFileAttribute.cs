@@ -7,11 +7,11 @@ using System.Threading.Tasks;
 namespace RopeSnake.Project
 {
     [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
-    public class JsonFileAttribute : Attribute
+    public class ModuleFileAttribute : Attribute
     {
         private string fileName;
 
-        public JsonFileAttribute(string fileName)
+        public ModuleFileAttribute(string fileName)
         {
             this.fileName = fileName;
         }

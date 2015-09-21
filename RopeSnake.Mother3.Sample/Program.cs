@@ -22,7 +22,7 @@ namespace RopeSnake.Mother3.Sample
             Mother3Rom rom = new Mother3Rom(source, settings);
 
             DataModule data = new DataModule(rom);
-            data.WriteJsonFiles("project");
+            data.WriteModule("project");
         }
     }
 }

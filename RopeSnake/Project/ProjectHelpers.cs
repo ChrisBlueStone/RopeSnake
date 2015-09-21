@@ -19,7 +19,7 @@ namespace RopeSnake.Project
 
             foreach (var property in properties)
             {
-                var attributes = property.CustomAttributes.Where(a => a.AttributeType == typeof(JsonFileAttribute));
+                var attributes = property.CustomAttributes.Where(a => a.AttributeType == typeof(ModuleFileAttribute));
 
                 if (attributes.Count() > 1)
                 {
@@ -31,7 +31,7 @@ namespace RopeSnake.Project
                 if (attribute != null)
                 {
                     string jsonFileName = (string)attribute.ConstructorArguments[0].Value;
-                    string fileName = Path.Combine(projectFolder, subFolder, jsonFileName);
+                    string fileName = Path.Combine(projectFolder, subFolder, jsonFileName + ".json");
                     object data;
 
                     using (var reader = File.OpenText(fileName))
@@ -52,7 +52,7 @@ namespace RopeSnake.Project
 
             foreach (var property in properties)
             {
-                var attributes = property.CustomAttributes.Where(a => a.AttributeType == typeof(JsonFileAttribute));
+                var attributes = property.CustomAttributes.Where(a => a.AttributeType == typeof(ModuleFileAttribute));
 
                 if (attributes.Count() > 1)
                 {
@@ -64,7 +64,7 @@ namespace RopeSnake.Project
                 if (attribute != null)
                 {
                     string jsonFileName = (string)attribute.ConstructorArguments[0].Value;
-                    string fileName = Path.Combine(projectFolder, subFolder, jsonFileName);
+                    string fileName = Path.Combine(projectFolder, subFolder, jsonFileName + ".json");
                     object data = property.GetValue(source);
 
                     FileInfo file = new FileInfo(fileName);

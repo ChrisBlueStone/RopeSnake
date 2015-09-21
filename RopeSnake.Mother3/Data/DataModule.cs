@@ -12,7 +12,7 @@ namespace RopeSnake.Mother3.Data
 {
     public class DataModule : IModule
     {
-        [JsonFile("items.json")]
+        [ModuleFile("items")]
         public List<Item> Items { get; set; }
 
         public DataModule()
@@ -22,7 +22,7 @@ namespace RopeSnake.Mother3.Data
 
         public DataModule(string projectDirectory)
         {
-            ReadJsonFiles(projectDirectory);
+            ReadModule(projectDirectory);
         }
 
         public DataModule(Mother3Rom rom)
@@ -42,12 +42,12 @@ namespace RopeSnake.Mother3.Data
                 Items.Add(reader.ReadItem());
         }
 
-        public void ReadJsonFiles(string projectDirectory)
+        public void ReadModule(string projectDirectory)
         {
             ProjectHelpers.ReadJsonFiles(projectDirectory, "data", this);
         }
 
-        public void WriteJsonFiles(string projectDirectory)
+        public void WriteModule(string projectDirectory)
         {
             ProjectHelpers.WriteJsonFiles(projectDirectory, "data", this);
         }
