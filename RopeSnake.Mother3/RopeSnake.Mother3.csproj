@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Data\DataBank.cs" />
+    <Compile Include="IO\ByteArrayConverter.cs" />
     <Compile Include="IO\FixedTableHeader.cs" />
     <Compile Include="Data\Item.cs" />
     <Compile Include="IO\Helpers.cs" />

@@ -12,7 +12,12 @@ namespace RopeSnake.Mother3.Data
     public class DataBank
     {
         [JsonFile("items.json")]
-        public List<Item> Items { get; set; } = new List<Item>();
+        public List<Item> Items { get; set; }
+
+        public DataBank(string projectDirectory)
+        {
+            ReadJson(projectDirectory);
+        }
 
         public DataBank(Mother3Rom rom)
         {
@@ -26,13 +31,19 @@ namespace RopeSnake.Mother3.Data
             TableInfo info = rom.Settings.DataTables["Items"];
             reader.Position = info.Address;
 
+            Items = new List<Item>();
             for (int i = 0; i < info.Count; i++)
                 Items.Add(reader.ReadItem());
         }
 
+        private void ReadJson(string projectDirectory)
+        {
+            Helpers.ReadJsonFiles(projectDirectory, "data", this);
+        }
+
         public void WriteJson(string projectDirectory)
         {
-            Helpers.WriteDataBanks(projectDirectory, "data", this);
+            Helpers.WriteJsonFiles(projectDirectory, "data", this);
         }
     }
 }

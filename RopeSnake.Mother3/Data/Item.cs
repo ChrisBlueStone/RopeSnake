@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
+using RopeSnake.Mother3.IO;
 
 namespace RopeSnake.Mother3.Data
 {
@@ -28,6 +30,7 @@ namespace RopeSnake.Mother3.Data
         public int BattleTextIndex { get; set; }
 
         // Unknowns
+        [JsonProperty(PropertyName = "UnknownData")]
         private byte[] unknownData = new byte[0x34];
 
         public byte GetUnknown(int index)
