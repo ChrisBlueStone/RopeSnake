@@ -9,10 +9,7 @@ namespace RopeSnake.Mother3.Text
 {
     public class EnglishStringReader : StringReader
     {
-        private bool encoded;
         private ScriptEncodingParameters encodingParameters;
-        private byte[] graphicsPad;
-        private byte[] codePad;
 
         public EnglishStringReader(Mother3Rom rom) : base(rom)
         {
@@ -22,29 +19,7 @@ namespace RopeSnake.Mother3.Text
                 throw new Exception("The character lookup is null");
             }
 
-            if ((rom.Settings.Version == Mother3Version.English10) || (rom.Settings.Version == Mother3Version.English11))
-            {
-                encoded = true;
-
-                // Get the encoding parameters
-                BinaryReader reader = new BinaryReader(rom.Source);
-                encodingParameters = rom.Settings.ScriptEncoding;
-
-                if (encodingParameters == null)
-                {
-                    throw new Exception("Script encoding parameters cannot be null");
-                }
-
-                reader.Position = encodingParameters.EvenPadAddress;
-                graphicsPad = reader.ReadByteArray(encodingParameters.EvenPadModulus);
-
-                reader.Position = encodingParameters.OddPadAddress;
-                codePad = reader.ReadByteArray(encodingParameters.OddPadModulus);
-            }
-            else
-            {
-                encoded = false;
-            }
+            encodingParameters = rom.Settings.ScriptEncoding;
         }
 
         public override string ReadDialogString(IBinaryReader reader)
@@ -116,7 +91,7 @@ namespace RopeSnake.Mother3.Text
             int pos = reader.Position + 0x8000000;
             byte raw = reader.ReadByte();
 
-            if (!encoded)
+            if (encodingParameters == null)
             {
                 return raw;
             }
@@ -126,13 +101,13 @@ namespace RopeSnake.Mother3.Text
             if (even)
             {
                 int offset = ((pos >> 1) % encodingParameters.EvenPadModulus);
-                byte pad = graphicsPad[offset];
+                byte pad = encodingParameters.EvenPad[offset];
                 return (byte)(((raw + encodingParameters.EvenOffset1) ^ pad) + encodingParameters.EvenOffset2);
             }
             else
             {
                 int offset = ((pos >> 1) % encodingParameters.OddPadModulus);
-                byte pad = codePad[offset];
+                byte pad = encodingParameters.OddPad[offset];
                 return (byte)(((raw + encodingParameters.OddOffset1) ^ pad) + encodingParameters.OddOffset2);
             }
         }

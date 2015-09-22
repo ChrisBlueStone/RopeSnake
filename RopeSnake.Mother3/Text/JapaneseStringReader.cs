@@ -9,31 +9,9 @@ namespace RopeSnake.Mother3.Text
 {
     public sealed class JapaneseStringReader : StringReader
     {
-        private static Encoding sjisEncoding = Encoding.GetEncoding(932);
-
         public JapaneseStringReader(Mother3Rom rom) : base(rom)
         {
-            if (rom.Settings.CharLookup == null)
-            {
-                charLookup = new Dictionary<short, string>();
-
-                // Build a lookup table from the font metadata
-                IBinaryReader sjisReader = new BinaryReader(rom.Source, true);
-                sjisReader.Position = rom.Settings.BankAddresses["MainFont"];
-
-                for (int i = 0; i < 7332; i++)
-                {
-                    byte[] sjis = sjisReader.ReadByteArray(2);
-                    sjisReader.Position += 20;
-
-                    string value = sjisEncoding.GetString(sjis);
-                    charLookup.Add((short)i, value);
-                }
-            }
-            else
-            {
-                charLookup = rom.Settings.CharLookup;
-            }
+            charLookup = rom.Settings.CharLookup;
         }
 
         public override string ReadDialogString(IBinaryReader reader) => ReadCodedString(reader);

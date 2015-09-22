@@ -10,6 +10,11 @@ namespace RopeSnake.Mother3.Text
 {
     public class TextModule : IModule
     {
+        private static ParallelOptions parallelOptions = new ParallelOptions()
+        {
+            MaxDegreeOfParallelism = Environment.ProcessorCount
+        };
+
         [ModuleFile("room-descriptions")]
         public Dictionary<int, string> RoomDescriptions { get; set; }
 
@@ -158,7 +163,8 @@ namespace RopeSnake.Mother3.Text
             MainScript = new Dictionary<int, Dictionary<int, string>>();
 
             int entryCount = pointers.Length / 2;
-            for (int i = 0; i < entryCount; i++)
+
+            Parallel.For(0, entryCount, parallelOptions, i =>
             {
                 int miniOffsetPointer = pointers[i * 2];
                 int textPointer = pointers[i * 2 + 1];
@@ -167,7 +173,12 @@ namespace RopeSnake.Mother3.Text
                 {
                     MainScript.Add(i, ReadOffsetText(rom, miniOffsetPointer, textPointer, true));
                 }
-            }
+            });
+
+            // Attempt to order the script entries (they'll be out of order due to the threading)
+            var list = MainScript.ToList();
+            list.Sort((a, b) => a.Key.CompareTo(b.Key));
+            MainScript = list.ToDictionary(kv => kv.Key, kv => kv.Value);
         }
 
         public void ReadModule(string projectFolder)
