@@ -15,8 +15,6 @@ namespace RopeSnake.Mother3.Data
         [ModuleFile("items")]
         public List<Item> Items { get; set; }
 
-        public DataModule() { }
-
         public DataModule(string projectFolder)
         {
             ReadModule(projectFolder);

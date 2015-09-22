@@ -248,6 +248,18 @@ namespace RopeSnake.Gba
 
         public ushort ReadUShort() => reader.ReadUShort();
 
+        public byte PeekByte() => reader.PeekByte();
+
+        public sbyte PeekSByte() => reader.PeekSByte();
+
+        public ushort PeekUShort() => reader.PeekUShort();
+
+        public short PeekShort() => reader.PeekShort();
+
+        public uint PeekUInt() => reader.PeekUInt();
+
+        public int PeekInt() => reader.PeekInt();
+
         #endregion
     }
 }

@@ -14,7 +14,7 @@ namespace RopeSnake.Mother3.IO
         Item ReadItem();
         Bg ReadBg();
         string ReadDialogString();
+        string ReadCodedString();
         string ReadCodedString(int maxLength);
-        int[] ReadOffsetTable();
     }
 }

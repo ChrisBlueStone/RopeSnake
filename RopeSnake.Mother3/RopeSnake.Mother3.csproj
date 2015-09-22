@@ -50,6 +50,8 @@
     <Compile Include="Data\Item.cs" />
     <Compile Include="IO\IMother3Reader.cs" />
     <Compile Include="IO\Mother3Reader.cs" />
+    <Compile Include="ScriptEncodingParameters.cs" />
+    <Compile Include="Text\ControlCode.cs" />
     <Compile Include="Text\EnglishStringReader.cs" />
     <Compile Include="Text\JapaneseStringReader.cs" />
     <Compile Include="Text\StringReader.cs" />

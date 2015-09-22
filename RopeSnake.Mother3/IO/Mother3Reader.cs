@@ -51,6 +51,43 @@ namespace RopeSnake.Mother3.IO
             }
         }
 
+        #region Misc methods
+
+        public int[] ReadOffsetTable()
+        {
+            int basePosition = Position;
+            int count = ReadInt();
+            int[] pointers = new int[count + 1];
+
+            // There's always an extra offset at the end denoting the address just
+            // after the table
+            for (int i = 0; i <= count; i++)
+            {
+                int offset = ReadInt();
+                pointers[i] = basePosition + offset;
+            }
+
+            return pointers;
+        }
+
+        public int[] ReadMiniOffsetTable(int baseAddress)
+        {
+            List<int> pointers = new List<int>();
+
+            ushort ch;
+            while((ch = ReadUShort()) != 0xFFFF)
+            {
+                pointers.Add(baseAddress + ch);
+            }
+
+            // Consume the count value stored at the end
+            int count = ReadUShort();
+
+            return pointers.ToArray();
+        }
+
+        #endregion
+
         #region IMother3Reader implementation
 
         public FixedTableHeader ReadFixedTableHeader()
@@ -147,24 +184,9 @@ namespace RopeSnake.Mother3.IO
 
         public string ReadDialogString() => stringReader.ReadDialogString(reader);
 
+        public string ReadCodedString() => stringReader.ReadCodedString(reader);
+
         public string ReadCodedString(int maxLength) => stringReader.ReadCodedString(reader, maxLength);
-
-        public int[] ReadOffsetTable()
-        {
-            int basePosition = Position;
-            int count = ReadInt();
-            int[] offsets = new int[count + 1];
-
-            // There's always an extra offset at the end denoting the address just
-            // after the table
-            for (int i = 0; i <= count; i++)
-            {
-                int offset = ReadInt();
-                offsets[i] = basePosition + offset;
-            }
-
-            return offsets;
-        }
 
         #endregion
 
@@ -213,6 +235,18 @@ namespace RopeSnake.Mother3.IO
         public uint ReadUInt() => reader.ReadUInt();
 
         public ushort ReadUShort() => reader.ReadUShort();
+
+        public byte PeekByte() => reader.PeekByte();
+
+        public sbyte PeekSByte() => reader.PeekSByte();
+
+        public ushort PeekUShort() => reader.PeekUShort();
+
+        public short PeekShort() => reader.PeekShort();
+
+        public uint PeekUInt() => reader.PeekUInt();
+
+        public int PeekInt() => reader.PeekInt();
 
         #endregion
     }

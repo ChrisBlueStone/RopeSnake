@@ -98,5 +98,27 @@ namespace RopeSnake.IO
 
             return sb.ToString();
         }
+
+        public byte PeekByte() => source.GetByte(Position);
+
+        public ushort PeekUShort()
+        {
+            ushort value = ReadUShort();
+            Position -= 2;
+            return value;
+        }
+
+        public uint PeekUInt()
+        {
+            uint value = ReadUInt();
+            Position -= 4;
+            return value;
+        }
+
+        public sbyte PeekSByte() => (sbyte)PeekByte();
+
+        public short PeekShort() => (short)PeekUShort();
+
+        public int PeekInt() => (int)PeekUInt();
     }
 }
