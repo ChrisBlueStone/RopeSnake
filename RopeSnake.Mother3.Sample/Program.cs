@@ -29,7 +29,7 @@ namespace RopeSnake.Mother3.Sample
                 [Mother3Version.English12] = "mother3_en_v12"
             };
 
-            Mother3Version currentVersion = Mother3Version.Japanese;
+            Mother3Version currentVersion = Mother3Version.English12;
 
             ByteArraySource source = new ByteArraySource(romNames[currentVersion] + ".gba");
             RomSettings settings = new RomSettings(romNames[currentVersion] + ".json");
