@@ -36,27 +36,30 @@ namespace RopeSnake.Mother3.Text
 
             if (code != null)
             {
-                sb.Append('[');
-
-                if (code.Tag != null)
+                if (code.Code != -1)
                 {
-                    sb.Append(code.Tag);
-                }
-                else
-                {
-                    sb.Append(((ushort)ch).ToString("X4"));
-                }
+                    sb.Append('[');
 
-                for (int i = 0; i < code.Arguments; i++)
-                {
-                    ch = reader.ReadShort();
-                    count++;
+                    if (code.Tag != null)
+                    {
+                        sb.Append(code.Tag);
+                    }
+                    else
+                    {
+                        sb.Append(((ushort)ch).ToString("X4"));
+                    }
 
-                    sb.Append(' ');
-                    sb.Append(((ushort)ch).ToString("X4"));
+                    for (int i = 0; i < code.Arguments; i++)
+                    {
+                        ch = reader.ReadShort();
+                        count++;
+
+                        sb.Append(' ');
+                        sb.Append(((ushort)ch).ToString("X4"));
+                    }
+
+                    sb.Append(']');
                 }
-
-                sb.Append(']');
             }
             else
             {
