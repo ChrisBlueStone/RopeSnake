@@ -64,7 +64,15 @@ namespace RopeSnake.Mother3.IO
             for (int i = 0; i <= count; i++)
             {
                 int offset = ReadInt();
-                pointers[i] = basePosition + offset;
+
+                if (offset == 0)
+                {
+                    pointers[i] = 0;
+                }
+                else
+                {
+                    pointers[i] = basePosition + offset;
+                }
             }
 
             return pointers;
