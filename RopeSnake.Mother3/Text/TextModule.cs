@@ -10,6 +10,11 @@ namespace RopeSnake.Mother3.Text
 {
     public class TextModule : IModule
     {
+        private static ParallelOptions parallelOptions = new ParallelOptions()
+        {
+            MaxDegreeOfParallelism = Environment.ProcessorCount
+        };
+
         [ModuleFile("room-descriptions")]
         public Dictionary<int, string> RoomDescriptions { get; set; }
 
@@ -46,6 +51,9 @@ namespace RopeSnake.Mother3.Text
         [ModuleFile("skill-descriptions")]
         public Dictionary<int, string> SkillDescriptions { get; set; }
 
+        [ModuleFile("main-script")]
+        public Dictionary<int, Dictionary<int, string>> MainScript { get; set; }
+
         public TextModule(string projectFolder)
         {
             ReadModule(projectFolder);
@@ -53,26 +61,14 @@ namespace RopeSnake.Mother3.Text
 
         public TextModule(Mother3Rom rom)
         {
-            Mother3Reader reader = new Mother3Reader(rom);
+            // Text bank
+            ReadTextBank(rom);
 
-            reader.Position = rom.Settings.BankAddresses["TextTable"];
-            int[] pointers = reader.ReadOffsetTable();
-
-            RoomDescriptions = ReadOffsetText(rom, pointers[0], pointers[1]);
-            ItemNames = ReadTableText(rom, pointers[2]);
-            ItemDescriptions = ReadOffsetText(rom, pointers[3], pointers[4]);
-            CharacterNames = ReadTableText(rom, pointers[5]);
-            PartyCharacterNames = ReadTableText(rom, pointers[6]);
-            EnemyNames = ReadTableText(rom, pointers[7], bugContext: 1);
-            PsiNames = ReadTableText(rom, pointers[8]);
-            PsiDescriptions = ReadOffsetText(rom, pointers[9], pointers[10]);
-            Statuses = ReadTableText(rom, pointers[11]);
-            DefaultNames = ReadTableText(rom, pointers[12]);
-            SpecialText = ReadTableText(rom, pointers[13]);
-            SkillDescriptions = ReadOffsetText(rom, pointers[14], pointers[15]);
+            // Main script
+            ReadMainScript(rom);
         }
 
-        private Dictionary<int, string> ReadOffsetText(Mother3Rom rom, int tableOffset, int textOffset)
+        private Dictionary<int, string> ReadOffsetText(Mother3Rom rom, int tableOffset, int textOffset, bool dialog)
         {
             Mother3Reader reader = new Mother3Reader(rom);
 
@@ -84,7 +80,18 @@ namespace RopeSnake.Mother3.Text
             for (int i = 0; i < pointers.Length; i++)
             {
                 reader.Position = pointers[i];
-                text.Add(i, reader.ReadCodedString());
+
+                if (pointers[i] != 0)
+                {
+                    if (dialog)
+                    {
+                        text.Add(i, reader.ReadDialogString());
+                    }
+                    else
+                    {
+                        text.Add(i, reader.ReadCodedString());
+                    }
+                }
             }
 
             return text;
@@ -92,6 +99,11 @@ namespace RopeSnake.Mother3.Text
 
         private Dictionary<int, string> ReadTableText(Mother3Rom rom, int offset, int bugContext = 0)
         {
+            if (offset == 0)
+            {
+                return null;
+            }
+
             Mother3Reader reader = new Mother3Reader(rom);
             reader.Position = offset;
 
@@ -119,6 +131,54 @@ namespace RopeSnake.Mother3.Text
             }
 
             return text;
+        }
+
+        private void ReadTextBank(Mother3Rom rom)
+        {
+            Mother3Reader reader = new Mother3Reader(rom);
+            reader.Position = rom.Settings.BankAddresses["TextTable"];
+            int[] pointers = reader.ReadOffsetTable();
+
+            RoomDescriptions = ReadOffsetText(rom, pointers[0], pointers[1], false);
+            ItemNames = ReadTableText(rom, pointers[2]);
+            ItemDescriptions = ReadOffsetText(rom, pointers[3], pointers[4], false);
+            CharacterNames = ReadTableText(rom, pointers[5]);
+            PartyCharacterNames = ReadTableText(rom, pointers[6]);
+            EnemyNames = ReadTableText(rom, pointers[7], bugContext: 1);
+            PsiNames = ReadTableText(rom, pointers[8]);
+            PsiDescriptions = ReadOffsetText(rom, pointers[9], pointers[10], false);
+            Statuses = ReadTableText(rom, pointers[11]);
+            DefaultNames = ReadTableText(rom, pointers[12]);
+            SpecialText = ReadTableText(rom, pointers[13]);
+            SkillDescriptions = ReadOffsetText(rom, pointers[14], pointers[15], false);
+        }
+
+        private void ReadMainScript(Mother3Rom rom)
+        {
+            // The main script is technically part of the map bank, but it makes more sense here
+            Mother3Reader reader = new Mother3Reader(rom);
+            reader.Position = rom.Settings.BankAddresses["Maps.MainScript"];
+            int[] pointers = reader.ReadOffsetTable();
+
+            MainScript = new Dictionary<int, Dictionary<int, string>>();
+
+            int entryCount = pointers.Length / 2;
+
+            Parallel.For(0, entryCount, parallelOptions, i =>
+            {
+                int miniOffsetPointer = pointers[i * 2];
+                int textPointer = pointers[i * 2 + 1];
+
+                if (miniOffsetPointer != 0 && textPointer != 0)
+                {
+                    MainScript.Add(i, ReadOffsetText(rom, miniOffsetPointer, textPointer, true));
+                }
+            });
+
+            // Attempt to order the script entries (they'll be out of order due to the threading)
+            var list = MainScript.ToList();
+            list.Sort((a, b) => a.Key.CompareTo(b.Key));
+            MainScript = list.ToDictionary(kv => kv.Key, kv => kv.Value);
         }
 
         public void ReadModule(string projectFolder)

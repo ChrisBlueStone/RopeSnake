@@ -12,23 +12,53 @@ namespace RopeSnake.Mother3
 {
     public sealed class Mother3Rom : GbaRom
     {
+        private static Encoding sjisEncoding = Encoding.GetEncoding(932);
+
         public RomSettings Settings { get; set; }
 
         public Mother3Rom(ISource source, RomSettings settings) : base(source)
         {
             Settings = settings;
+
+            if (settings.CharLookup == null)
+            {
+                ReadCharLookup();
+            }
+
+            if (settings.ScriptEncoding != null)
+            {
+                ReadEncodingPadData();
+            }
         }
 
-        private Mother3Version DetectVersion()
+        private void ReadCharLookup()
         {
-            if (Header.Title != "MOTHER3" || Header.GameCode != "A3UJ")
-                return Mother3Version.Invalid;
+            Settings.CharLookup = new Dictionary<short, string>();
 
-            if (Source.Length != 32 * 1024 * 1024)
-                return Mother3Version.Invalid;
+            // Build a lookup table from the font metadata
+            IBinaryReader sjisReader = new BinaryReader(Source, true);
+            sjisReader.Position = Settings.BankAddresses["MainFont"];
 
-            // TODO: finish this
-            throw new NotImplementedException();
+            for (int i = 0; i < 7332; i++)
+            {
+                byte[] sjis = sjisReader.ReadByteArray(2);
+                sjisReader.Position += 20;
+
+                string value = sjisEncoding.GetString(sjis);
+                Settings.CharLookup.Add((short)i, value);
+            }
+        }
+
+        private void ReadEncodingPadData()
+        {
+            BinaryReader reader = new BinaryReader(Source);
+            ScriptEncodingParameters encodingParameters = Settings.ScriptEncoding;
+
+            reader.Position = encodingParameters.EvenPadAddress;
+            encodingParameters.EvenPad = reader.ReadByteArray(encodingParameters.EvenPadModulus);
+
+            reader.Position = encodingParameters.OddPadAddress;
+            encodingParameters.OddPad = reader.ReadByteArray(encodingParameters.OddPadModulus);
         }
     }
 

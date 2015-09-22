@@ -1,17 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Drawing;
-using RopeSnake.Mother3;
-using RopeSnake.Mother3.IO;
-using RopeSnake.Mother3.Data;
+﻿using System.Collections.Generic;
+using System.IO;
 using RopeSnake.Mother3.Text;
-using RopeSnake.Graphics;
-using RopeSnake.Gba;
 using RopeSnake.IO;
-using Newtonsoft.Json;
 
 namespace RopeSnake.Mother3.Sample
 {
@@ -29,10 +19,21 @@ namespace RopeSnake.Mother3.Sample
                 [Mother3Version.English12] = "mother3_en_v12"
             };
 
-            Mother3Version currentVersion = Mother3Version.Japanese;
+            Mother3Version currentVersion = Mother3Version.English12;
 
             ByteArraySource source = new ByteArraySource(romNames[currentVersion] + ".gba");
-            RomSettings settings = new RomSettings(romNames[currentVersion] + ".json");
+
+            RomSettings settings;
+            if (currentVersion == Mother3Version.Japanese)
+            {
+                settings = new RomSettings(Path.Combine("Settings", romNames[currentVersion] + ".json"));
+            }
+            else
+            {
+                settings = new RomSettings(Path.Combine("Settings", "mother3_jp.json"),
+                    Path.Combine("Settings", romNames[currentVersion] + ".json"));
+            }
+
             Mother3Rom rom = new Mother3Rom(source, settings);
 
             TextModule text = new TextModule(rom);
